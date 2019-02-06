@@ -35,8 +35,8 @@ Upon starting the game, the user can fire the engine using space bar, and turn t
 If the player turns on the assistance features, which are bonus features, a line is drawn from where the rocket is to where it is predicted to land. the line is two colors, orange and red. red is an indication of a 'suicide burn' point, which is a point where the rocket has to fire to land safely, otherwise there is not enough thrust to stop the rocket beyond this point.
 
 
-<!-- 
-![wireframes]() -->
+
+![wireframes](https://github.com/Nader-gator/SuicideBurn/blob/master/wireframe.png)
 
 ### Architecture and Technologies
 
