@@ -36,7 +36,7 @@ If the player turns on the assistance features, which are bonus features, a line
 
 
 
-![wireframes](https://github.com/Nader-gator/SuicideBurn/blob/master/wireframe.png)
+![wireframes](https://github.com/Nader-gator/SuicideBurn/blob/master/wireframFinal.png)
 
 ### Architecture and Technologies
 
