@@ -34,28 +34,160 @@ export default class Surface {
     let endingXcoord = endPoint[0]
     let range = endingXcoord - startingXcoord
     let midPoint = Math.floor((startingXcoord + endingXcoord) / 2)
-    while (startingXcoord !== endingXcoord){
-      let dxdr = (midPoint - startingXcoord) / range
+    let startingYcoord = startPoint[1]
+    let endingYcoord = endPoint[1]
+
+    while (startingXcoord !== midPoint){
+      let dxdr = ((startingXcoord - midPoint) / range)
+      let modifier = (0.9 + dxdr) * 100 // more modifiers here
       
+      const flatnessModifier = 100 //this can be changed for steepness
+      //up or down
+      if (Math.floor(Math.random() * flatnessModifier) < modifier) {
+        //up
+        startingYcoord++
+        if (startingYcoord < peak) {
+          this.pointOn(startingXcoord,startingYcoord).ground = true
+        } else { //hit the peak here
+          startingYcoord--
+          this.pointOn(startingXcoord,startingYcoord).ground = true
+        }
+      } 
       
+      else {
+        //down
+        startingYcoord--
+        if (startingYcoord < peak) {
+          this.pointOn(startingXcoord,startingYcoord).ground = true
+        }
+      }
+      startingXcoord++
+    }
+
+    while(startingXcoord !== endingXcoord){
+      let dxdr = ((startingXcoord - endingXcoord) / range)
+      let modifier = (1 + dxdr) * 100
+
+      const flatnessModifier = 120 //this can be changed for steepness
+      if (Math.floor(Math.random() * flatnessModifier) < modifier) {
+        startingYcoord--
+        if (startingYcoord < peak) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      } else {
+        startingYcoord++
+        if (startingYcoord < peak) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        } else {
+          startingYcoord--
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      }
       startingXcoord++
     }
   }
 
   generateValley(startPoint, endPoint, depth) {
+    let startingXcoord = startPoint[0]
+    let endingXcoord = endPoint[0]
+    let range = endingXcoord - startingXcoord
+    let midPoint = Math.floor((startingXcoord + endingXcoord) / 2)
+    let startingYcoord = startPoint[1]
+    let endingYcoord = endPoint[1]
 
+    while (startingXcoord !== midPoint) {
+      let dxdr = ((startingXcoord - midPoint) / range)
+      let modifier = (0.9 + dxdr) * 100 // more modifiers here
+
+      const flatnessModifier = 100 //this can be changed for steepness
+      //up or down
+      if (Math.floor(Math.random() * flatnessModifier) < modifier) {
+        //up
+        startingYcoord--
+        if (startingYcoord < depth) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        } else { //hit the depth here
+          startingYcoord++
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      } else {
+        //down
+        startingYcoord++
+        if (startingYcoord < depth) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      }
+      startingXcoord++
+    }
+
+    while (startingXcoord !== endingXcoord) {
+      let dxdr = ((startingXcoord - endingXcoord) / range)
+      let modifier = (1 + dxdr) * 100
+
+      const flatnessModifier = 120 //this can be changed for steepness
+      if (Math.floor(Math.random() * flatnessModifier) < modifier) {
+        startingYcoord++
+        if (startingYcoord < depth) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      } else {
+        startingYcoord--
+        if (startingYcoord < depth) {
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        } else {
+          startingYcoord++
+          this.pointOn(startingXcoord, startingYcoord).ground = true
+        }
+      }
+      startingXcoord++
+    }
   }
 
   generateFlat(startPoint, endPoint) {
+    let startingXcoord = startPoint[0]
+    let endingXcoord = endPoint[0]
+    let startingYcoord = startPoint[1]
 
+    while (startingXcoord !== endingXcoord){
+      this.pointOn(startingXcoord, startingYcoord).ground = true
+      this.pointOn(startingXcoord, startingYcoord).bonus = true
+      startingXcoord++
+    }
   }
 
   generateBonusFlat(startPoint, endPoint) {
+    let bonus = Math.floor(Math.random() * 6)
+    let startingXcoord = startPoint[0]
+    let endingXcoord = endPoint[0]
+    let startingYcoord = startPoint[1]
 
+    while (startingXcoord !== endingXcoord) {
+      this.pointOn(startingXcoord, startingYcoord).ground = true
+      this.pointOn(startingXcoord, startingYcoord).bonus = bonus
+      startingXcoord++
+    }
+  }
+
+  pointOn(x,y){
+    // y = this.height - y
+    return this.grid[y][x]
   }
 
 }
 
-const options = {width: 10,height: 5, gravity: 9.8}
+const options = {width: 50,height: 50, gravity: 9.8}
 let surface = new Surface(options)
+surface.generateGrid()
+surface.generateFlat([1, 30], [10, 30], 45)
+let test = surface.grid.map(row => {
+  return row.map(el => {
+    if (el.ground === true){
+      return "Poi"
+    }
+
+    return el
+  })
+})
+test = test.reverse()
 debugger
+
