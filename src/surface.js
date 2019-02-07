@@ -34,35 +34,48 @@ export default class Surface {
   }
 
   generateRandom(){
-    "4 bonus, 3 flat, 3hills, 1 mountain"
-    const draws = [
-      'flat',
-      'flatBonus',
-      ['hill','valley'],
-      ['mountain','fall']
-    ]
-    
-    let randAr = []
-
-    for (let i = 0; i < 11; i++) {
-      if (i < 4){
-        randAr.push(draws[1])
-      } else if (i < 7){
-        randAr.push(draws[0])
-      } else if (i < 10){
-        randAr.push(draws[2])
-      } else if(i == 10){
-        randAr.push(draws[3])
-      }
-    }
-    randAr = this.shuffle(randAr)
-    randAr.unshift(draws[2])
-    randAr = randAr.flat()
     // debugger
-    let startCoords = [0,this.height * 0.8]
+    "4 bonus, 3 flat, 3hills, 2 mountain"
+    const draws = {
+      flat: 'flat',
+      bonus: 'flatBonus',
+      hill:['hill','valley'],
+      mountain: ['mountain','fall']
+    }
+    
+    let randAr = [];
+    
+
+    [1,2].forEach(i=>{
+      randAr.push(draws.bonus)
+    });
+    [1,2].forEach(i=>{
+      randAr.push(draws.flat)
+    });
+    [1,2].forEach(i=>{
+      randAr.push(draws.hill)
+    });
+    [1,2,3].forEach(i=>{
+      randAr.push(draws.mountain)
+    })
+    
+    randAr= randAr.concat(randAr)
+    
+    randAr = this.shuffle(randAr)
+    randAr.unshift(draws.hill)
+    randAr = randAr.flat()
+
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "white"
+    this.ctx.lineWidth = 0.5
+    
+    let startCoords = [0,this.floor]
     randAr.forEach(action=>{
       startCoords = this.draw(startCoords,action)
     })
+    
+    this.ctx.stroke();
+    
   }
 
   shuffle(a){
@@ -89,7 +102,7 @@ export default class Surface {
     let yFloor
     //----modifiable random generator parameters
 
-
+    
     switch (type) {
       case 'flat':
         yRand = {max: 2, type: 0}
@@ -107,41 +120,42 @@ export default class Surface {
         length = Math.round(0.01 * this.width)
         xEnd = xStart + length
         xTravel = Math.round(length * 0.3)
+
         break
 
         case 'valley':
         yRand = {max: 20, type: 1}
         yPeak = {max: 5,type:1}
         yFloor = {max: 20,type: -1}
-        length = Math.round(0.09 * this.width)
+        length = Math.round(0.04 * this.width)
         xEnd = xStart + length
-        xTravel = Math.round(length * 0.1)
+        xTravel = Math.round(length * 0.15)
         break
         
         case 'hill':
         yRand = {max: 20, type: -1}
         yPeak = {max: 5,type:1}
         yFloor = {max: 20,type: -1}
-        length = Math.round(0.09 * this.width)
+        length = Math.round(0.02 * this.width)
         xEnd = xStart + length
-        xTravel = Math.round(length * 0.1)
+        xTravel = Math.round(length * 0.08)
         break
 
       case 'mountain':
-        yRand = {max: 100, type: -1}
+        yRand = {max: 150, type: -1}
         yPeak = {max: 20,type:1}
         yFloor = {max: 20,type: -1}
-        length = Math.round(0.2 * this.width)
+        length = Math.round(0.08 * this.width)
         xEnd = xStart + length
-        xTravel = Math.round(length * 0.13)
+        xTravel = Math.round(length * 0.15)
         break
       case 'fall':
-        yRand = {max: 100, type: 1}
+        yRand = {max: 150, type: 1}
         yPeak = {max: 20,type:1}
         yFloor = {max: 20,type: -1}
-        length = Math.round(0.2 * this.width)
+        length = Math.round(0.04 * this.width)
         xEnd = xStart + length
-        xTravel = Math.round(length * 0.13)
+        xTravel = Math.round(length * 0.15)
         break
     }
 
@@ -150,7 +164,6 @@ export default class Surface {
 
     while (true) {
       this.drawToCoords([xStart, yStart], [newX, newY])
-      console.log([newX, newY])
 
       if (newX >= xEnd){
         return [newX, newY]
@@ -196,12 +209,11 @@ export default class Surface {
     const toX= to[0]
     const toY= to[1]
 
-    ctx.beginPath();
-    ctx.strokeStyle = "white"
-    ctx.lineWidth = 0.5
+    // ctx.beginPath();
+
     ctx.moveTo(fromX, fromY)
     ctx.lineTo(toX, toY);
-    ctx.stroke();
+    
   }
 
 }

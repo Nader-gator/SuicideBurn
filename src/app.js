@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded",() => {
   const canvasEl = document.getElementsByTagName('canvas')[0]
   // const width = 3500
   // const height = 550
-  const width = 1440
-  const height = 600
+  const width = 3000
+  const height = 700
 
   canvasEl.width = width
   canvasEl.height = height
