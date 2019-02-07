@@ -84,6 +84,17 @@ export default class Surface {
         }
       })
     })
+
+    this.grid.forEach((row, y) => {
+      row.forEach((el, x) => {
+        if (el.star === true) {
+          this.ctx.beginPath();
+          this.ctx.arc(x, y, 1, 0, 2 * Math.PI);
+          this.ctx.fillStyle = "white";
+          this.ctx.fill();
+        }
+      })
+    })
   }
 
   generateRandom(){
@@ -270,22 +281,3 @@ export default class Surface {
   }
 
 }
-
-
-// let oldX = 0
-// let oldY = this.floor
-// let newX = 1
-// let newY = oldY - 1
-// let distanceMod
-// let heightMod
-// let peakMod
-// while (newX < this.width) {
-//   this.drawToCoords([oldX, oldY], [newX, newY])
-//   oldX = newX;
-//   oldY = newY
-//   newY = newY + this.randomNum(heightMod)
-//   while (newY > this.floor || newY < this.ceiling) {
-//     newY = newY + this.randomNum(peakMod)
-//   }
-//   newX = newX + distanceMod
-// }

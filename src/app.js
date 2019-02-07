@@ -21,16 +21,7 @@ document.addEventListener("DOMContentLoaded",() => {
   const surface = new Surface({width, height, gravity:9.8, ctx})
 
   //----Draw Stars
-    surface.grid.forEach((row,y)=>{
-      row.forEach((el,x)=>{
-        if (el.star === true){
-          ctx.beginPath();
-          ctx.arc(x, y, 1, 0, 2 * Math.PI);
-          ctx.fillStyle = "white";
-          ctx.fill();
-        }
-      })
-    })
+
   //----Draw Stars
 
 
