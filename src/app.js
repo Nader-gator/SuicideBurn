@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded",() => {
 
 
   //--Draw the lines
-    surface.draw()
+    surface.generateRandom()
 
   //--Draw the lines
 })
