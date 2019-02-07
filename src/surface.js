@@ -9,6 +9,9 @@ export default class Surface {
     this.ctx = options.ctx
     this.ceiling = this.height * 0.3
     this.floor = this.height * 0.9
+    this.points = []
+    this.generateRandom()
+    this.insertStars()
   }
 
   generateGrid(){
@@ -20,14 +23,64 @@ export default class Surface {
         }
     }
     this.grid = grid
-    this.insertStars()
   }
+
+  collisionHappened(sX,sY){
+    let fX ;let fY;let lX;let lY
+    for (let i = 0; i < this.points.length; i++) {
+      if (this.points[i][0] > sX){
+        lX = this.points[i][0]
+        lY = this.points[i][1]
+        fX = this.points[i - 1][0]
+        fY = this.points[i - 1][1]
+        break
+      }
+    }
+
+    let dx = lX -fX
+    let dY = lY - fY
+
+    if (dY <= 0){ //going up
+      if (sY > fY){
+        return true
+      } else if (sY < lY){
+        return false
+      }
+    }
+    if (dY > 0) {
+      if (sY > lY){
+        return true
+      } else if (sY < fY){
+        return false
+      }
+    }
+
+    let sxP = (sX - fX) / dx
+    let syP= (fY - sY) / dY
+    if (syP === 0 && sxP === 0){
+      return true
+    }
+    if (Math.abs(syP) > sxP){
+      if (dY > 0){
+        return true
+      }
+      return false
+    }
+    if (dY > 0) {
+      return false
+    }
+    return true
+  }
+
+
 
   insertStars(){
     this.grid.forEach(row => {
       row.forEach(point => {
         if (Math.floor(Math.random() * 7000) === 1){
-          point.star = true
+          if (!this.collisionHappened(point.x,point.y)){
+            point.star = true
+          }
         }
       })
     })
@@ -210,7 +263,7 @@ export default class Surface {
     const toY= to[1]
 
     // ctx.beginPath();
-
+    this.points.push([fromX,fromY])
     ctx.moveTo(fromX, fromY)
     ctx.lineTo(toX, toY);
     
