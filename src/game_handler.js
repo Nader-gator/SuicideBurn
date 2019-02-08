@@ -5,13 +5,21 @@ export default class GameHandler{
   }
 
   isOver(){
+    if (this.surface.collisionHappened(this.ship.boardX+30,this.ship.boardY+30)){
+      return true
+    }
     return false
   }
 
   start(){
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.ship.step()
       this.ship.render()
+      if (this.isOver()){
+        this.ship.fire = false
+        this.ship.render()
+        clearInterval(this.interval)
+      }
     }, 20);
 
 

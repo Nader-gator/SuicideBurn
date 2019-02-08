@@ -7,6 +7,8 @@ export default class Ship {
     this.vSpeed = options.vSpeed
     this.x = options.coords[0]
     this.y = options.coords[1]
+    this.boardX = options.coords[0]
+    this.boardY = options.coords[1]
     this.ctx = options.ctx
     this.gravity= options.gravity
 
@@ -28,7 +30,9 @@ export default class Ship {
 
     const x = this.calculateX()
     const y = this.calculateY()
-    
+
+    this.boardX= this.boardX + this.hSpeed
+    this.boardY= this.boardY + this.vSpeed
     this.x = x
     this.y = y
 
@@ -110,7 +114,7 @@ export default class Ship {
       this.fireEngine()
     }
     const ship = document.getElementById("ship")
-
+    
     this.ctx.drawImage(ship,this.x,this.y,30,30);
     
     

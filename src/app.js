@@ -21,12 +21,13 @@ document.addEventListener("DOMContentLoaded",() => {
     {width,
      height,
      gravity:0.0035,
+    // gravity: 0,
      ctx}
       )
 
   const ship = new Ship(
     {hSpeed: 2,
-    vSpeed:0.5,
+    vSpeed: 0.5,
     coords:[50,50],
     ctx: shipCtx,
     gravity: surface.gravity
