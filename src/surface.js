@@ -1,5 +1,5 @@
 import Point from './point'
-
+import {width,height} from './app'
 export default class Surface {
   constructor(options){
     this.width = options.width
@@ -7,11 +7,18 @@ export default class Surface {
     this.gravity = options.gravity
     this.generateGrid()
     this.ctx = options.ctx
+    this.render()
     this.ceiling = this.height * 0.3
     this.floor = this.height * 0.9
     this.points = []
     this.generateRandom()
     this.insertStars()
+  }
+
+  render(){
+
+    this.ctx.fillRect(0, 0, width, height);
+    this.ctx.fillStyle = 'black';
   }
 
   generateGrid(){
@@ -139,7 +146,7 @@ export default class Surface {
     })
     
     this.ctx.stroke();
-    
+    this.ctx.save()
   }
 
   shuffle(a){

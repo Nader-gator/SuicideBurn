@@ -1,32 +1,34 @@
 import Ship from './ship'
 import Surface from './surface'
+import Game from './game_handler'
+  export const width = 3000
+  export const height = 700
 
 document.addEventListener("DOMContentLoaded",() => {
-  const canvasEl = document.getElementsByTagName('canvas')[0]
-  // const width = 3500
-  // const height = 550
-  const width = 3000
-  const height = 700
-
-  canvasEl.width = width
-  canvasEl.height = height
-  // canvasEl.width = window.innerWidth
-  
-  //-----CANVAS
+  const canvasEl = document.getElementById('layer1')
+  const shipcanvasEl = document.getElementById('layer2')
   const ctx = canvasEl.getContext("2d")
-  ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = 'black';
-  //-----CANVAS
-  
-  const surface = new Surface({width, height, gravity:9.8, ctx})
-
-  //----Draw Stars
-
-  //----Draw Stars
+  const shipCtx = shipcanvasEl.getContext("2d")
 
 
-  //--Draw the lines
-    // surface.generateRandom()
-    // debugger
-  //--Draw the lines
+    canvasEl.height = height
+    canvasEl.width = window.innerWidth
+
+
+  const surface = new Surface(
+    {width,
+     height, 
+     gravity:9.8, 
+     ctx}
+      )
+
+  const ship = new Ship(
+    {hSpeed: 0,
+    vSpeed:0,
+    coords:[50,50],
+    ctx: shipCtx}
+      )
+  const game = new Game(surface,ship)
+
+  game.start()
 })
