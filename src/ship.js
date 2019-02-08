@@ -9,17 +9,25 @@ export default class Ship {
     this.y = options.coords[1]
     this.ctx = options.ctx
     this.offset = 90
-    this.rotate=this.rotate.bind(this)
-    this.rotate({},90)
+    this.keyAction=this.keyAction.bind(this)
+    this.keyAction({},90)
     this.angle = 90
+    this.fire = false
   }
 
   step(){
+    window.onkeydown = this.fireEngine
+
     const x = this.calculateX()
     const y = this.calculateY()
-
+    
     this.x = x
     this.y = y
+  }
+
+  fireEngine(e){
+  
+
   }
 
   calculateX(){
@@ -27,13 +35,13 @@ export default class Ship {
 
 
   calculatey(){
-
   }
 
-  rotate(e,deg){
+  keyAction(e,deg){
+    // debugger
     const offsetX=(this.x)+(30/2)
     const offsetY=(this.y)+(30/2)
-    this.ctx.clearRect(0, 0, width, height);
+    
     this.ctx.translate(offsetX , offsetY);
     
     if (e.code === "ArrowRight" && this.angle < 90){
@@ -47,16 +55,25 @@ export default class Ship {
     }
     if(deg){
        this.ctx.rotate(-deg*Math.PI/180);
-
+    }
+    if (e.code === "Space") {
+      this.fire = true
     }
     this.ctx.translate(-1*(offsetX), -1*(offsetY));
   }
   
   render(){
-    window.onkeydown = this.rotate
+    window.onkeydown = this.keyAction
+    window.onkeyup = (e)=> {if(e.code==="Space"){this.fire=false}}
+    this.ctx.clearRect(0, 0, width, height);
+    if(this.fire){
+      const shipFiring = document.getElementById("ship-firing")
+      this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
+    }
     const ship = document.getElementById("ship")
-
     
-    this.ctx.drawImage(ship, this.x, this.y,30,30);
+    this.ctx.drawImage(ship,this.x,this.y,30,30);
+    
+    
   }
 }

@@ -11,7 +11,7 @@ export default class GameHandler{
   start(){
     setInterval(() => {
       this.ship.render()
-    }, 1);
+    }, 20);
 
 
   }
