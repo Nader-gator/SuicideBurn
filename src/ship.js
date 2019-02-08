@@ -8,6 +8,7 @@ export default class Ship {
     this.x = options.coords[0]
     this.y = options.coords[1]
     this.ctx = options.ctx
+    this.gravity= options.gravity
 
     this.ctx.height = height
     this.ctx.width = width
@@ -16,6 +17,7 @@ export default class Ship {
     this.keyAction({},90)
     this.angle = 90
     this.fire = false
+    this.firing = false
     this.step = this.step.bind(this)
   }
 
@@ -26,12 +28,26 @@ export default class Ship {
 
     const x = this.calculateX()
     const y = this.calculateY()
-
+    
     this.x = x
     this.y = y
+
   }
 
-  fireEngine(e){
+  fireEngine(){
+    this.updateVSpeed(0.009)
+    this.updateHSpeed(0.009)
+  }
+
+  updateVSpeed(force){
+    this.vSpeed -= force * Math.cos(this.radians(this.angle))
+  }
+  updateHSpeed(force){
+    this.hSpeed -= force * Math.sin(this.radians(this.angle))
+  }
+
+  gravityChange(){
+    this.vSpeed += this.gravity
   }
 
   calculateX(){
@@ -63,7 +79,6 @@ export default class Ship {
     if (e.code === "ArrowRight" && this.angle < 90){
       this.ctx.rotate(-10*Math.PI/180);
       this.angle += 10
-      
     }
     if(e.code === "ArrowLeft" && this.angle > -90){
       this.ctx.rotate(10*Math.PI/180);
@@ -73,20 +88,26 @@ export default class Ship {
        this.ctx.rotate(-deg*Math.PI/180);
     }
     if (e.code === "Space") {
+      this.firing=true
       this.fire = true
     }
-    this.ctx.translate(-1*(offsetX), -1*(offsetY));
+    this.ctx.translate(-1*(offsetX), -1*(offsetY))
   }
   
   render(){
     window.onkeydown = this.keyAction
-    window.onkeyup = (e)=> {if(e.code==="Space"){this.fire=false}}
+    window.onkeyup = (e)=> {if(e.code==="Space"){
+      this.fire=false;this.firing=false}}
+    this.gravityChange()
     this.ctx.clearRect(this.x-10, this.y-10, height, width);
 
 
     if(this.fire){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
+    }
+    if (this.firing){
+      this.fireEngine()
     }
     const ship = document.getElementById("ship")
 

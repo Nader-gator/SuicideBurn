@@ -19,16 +19,18 @@ document.addEventListener("DOMContentLoaded",() => {
 
   const surface = new Surface(
     {width,
-     height, 
-     gravity:9.8, 
+     height,
+     gravity:0.0035,
      ctx}
       )
 
   const ship = new Ship(
-    {hSpeed: 0,
-    vSpeed:1,
+    {hSpeed: 2,
+    vSpeed:0.5,
     coords:[50,50],
-    ctx: shipCtx}
+    ctx: shipCtx,
+    gravity: surface.gravity
+      }
       )
   const game = new Game(surface,ship)
 
