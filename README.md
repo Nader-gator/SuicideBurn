@@ -68,13 +68,13 @@ In addition to the entry file, there will be three scripts involved in this proj
 **Day 2**: Continue refining the random surface generator. after some refining, dedicate the day into implementing proper physics for the ship object. One the physics are working, finish by creating a presentable HTML canvas drawing for the ship. Goals for the day:
 
 - [x] Iron out any random surface generation bugs and issues
-- [ ] Implement all spaceship trajectory physics
+- [x] Implement all spaceship trajectory physics
 - [x] Create a canvas shape for the spaceship
 
 
 **Day 3**: Create the game collision detection system, points tracking, pause and start game features, 'about' modal. add difficulty setting which adjusts the gravity level. Goals for the day:
 
-- [ ] Add logic needed to start, pause, and finish the game
+- [x] Add logic needed to start, pause, and finish the game
 - [ ] Add difficulty level
 - [ ] Add persistent high score tracking
 - [ ] Add 'about' modal
