@@ -10,7 +10,8 @@ export default class Ship {
     this.ctx = options.ctx
     this.offset = 90
     this.rotate=this.rotate.bind(this)
-    this.rotate({},-1.6)
+    this.rotate({},90)
+    this.angle = 90
   }
 
   step(){
@@ -35,14 +36,18 @@ export default class Ship {
     this.ctx.clearRect(0, 0, width, height);
     this.ctx.translate(offsetX , offsetY);
     
-    if (e.code === "ArrowRight"){
-      this.ctx.rotate(0.1);
+    if (e.code === "ArrowRight" && this.angle < 90){
+      this.ctx.rotate(-10*Math.PI/180);
+      this.angle += 10
+      
     }
-    if(e.code === "ArrowLeft"){
-      this.ctx.rotate(-0.1);
+    if(e.code === "ArrowLeft" && this.angle > -90){
+      this.ctx.rotate(10*Math.PI/180);
+      this.angle -= 10
     }
     if(deg){
-      this.ctx.rotate(deg);
+       this.ctx.rotate(-deg*Math.PI/180);
+
     }
     this.ctx.translate(-1*(offsetX), -1*(offsetY));
   }
