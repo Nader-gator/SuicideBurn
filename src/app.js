@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded",() => {
 
     canvasEl.height = height
     canvasEl.width = window.innerWidth
+    shipcanvasEl.height = height
+    shipcanvasEl.width = window.innerWidth
 
 
   const surface = new Surface(
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded",() => {
 
   const ship = new Ship(
     {hSpeed: 0,
-    vSpeed:0,
+    vSpeed:1,
     coords:[50,50],
     ctx: shipCtx}
       )

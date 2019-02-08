@@ -10,6 +10,7 @@ export default class GameHandler{
 
   start(){
     setInterval(() => {
+      this.ship.step()
       this.ship.render()
     }, 20);
 

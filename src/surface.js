@@ -1,5 +1,6 @@
 import Point from './point'
 import {width,height} from './app'
+
 export default class Surface {
   constructor(options){
     this.width = options.width
@@ -105,7 +106,7 @@ export default class Surface {
   }
 
   generateRandom(){
-    // debugger
+
     "4 bonus, 3 flat, 3hills, 2 mountain"
     const draws = {
       flat: 'flat',
