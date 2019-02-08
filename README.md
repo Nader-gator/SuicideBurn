@@ -20,7 +20,7 @@ The core Lunar Lander game does not have any variations, however there are many 
 With this Lunar Lander game, users will be able to:
 
 - [ ] Start and pause pause
-- [ ] Rotate the ship and fire the engine
+- [x] Rotate the ship and fire the engine
 - [ ] keep track of the high scores
 
 In addition, this project will include:
@@ -61,15 +61,15 @@ In addition to the entry file, there will be three scripts involved in this proj
 
 **Day 1**: Set up all the files and folders, create an entry point and a HTML page loading the script. Set up Webpack-cli, review the physics formulas needed to calculate spaceship trajectory properly in presence of gravity, design and implement a random moon surface generator. Implement a render function for the generated surface. Goals for the day:
 
- - [ ] Create a working bundle with Webpack-cli
- - [ ] Design a random surface generation algorithm and implement it
- - [ ] Implement a render function for the generated surface
+ - [x] Create a working bundle with Webpack-cli
+ - [x] Design a random surface generation algorithm and implement it
+ - [x] Implement a render function for the generated surface
 
 **Day 2**: Continue refining the random surface generator. after some refining, dedicate the day into implementing proper physics for the ship object. One the physics are working, finish by creating a presentable HTML canvas drawing for the ship. Goals for the day:
 
-- [ ] Iron out any random surface generation bugs and issues
+- [x] Iron out any random surface generation bugs and issues
 - [ ] Implement all spaceship trajectory physics
-- [ ] Create a canvas shape for the spaceship
+- [x] Create a canvas shape for the spaceship
 
 
 **Day 3**: Create the game collision detection system, points tracking, pause and start game features, 'about' modal. add difficulty setting which adjusts the gravity level. Goals for the day:
