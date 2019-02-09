@@ -11,6 +11,9 @@ export default class Ship {
     this.boardY = options.coords[1]
     this.ctx = options.ctx
     this.gravity= options.gravity
+    this.statsCtx = options.statsCtx
+    this.textCtx = options.textCtx
+    this.fuel = 5000
 
     this.ctx.height = height
     this.ctx.width = width
@@ -105,10 +108,13 @@ export default class Ship {
     this.gravityChange()
     this.ctx.clearRect(this.x-10, this.y-10, height, width);
 
+      this.drawStats()
+
 
     if(this.fire){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
+      this.fuel -= 10
     }
     if (this.firing){
       this.fireEngine()
@@ -118,5 +124,32 @@ export default class Ship {
     this.ctx.drawImage(ship,this.x,this.y,30,30);
     
     
+  }
+
+  drawStats(){
+    const ctx = this.statsCtx
+    const text = this.textCtx
+    
+    debugger
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "white";
+    ctx.fillStyle="black"
+    ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
+    ctx.fill()
+    ctx.stroke();
+
+
+    text.clearRect(window.innerWidth * 0.865, 30, 160, 90)
+    text.beginPath();
+    text.font = "normal 13px Arial ";
+    text.fillStyle = "grey";
+    text.lineWidth = "1"
+    text.textAlign = "right";
+    console.log(this.vSpeed)
+    text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.955, 60)
+
+    text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.955, 80)
+    text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.955, 100)
   }
 }

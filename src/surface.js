@@ -182,7 +182,7 @@ export default class Surface {
         yFloor = {max: 20,type: -1}
         length = (0.03 * this.width)
         xEnd = xStart + length
-        xTravel = length * 0.3
+        xTravel = Math.round(length * 0.6)
         break
 
         case 'flatBonus':
@@ -191,7 +191,7 @@ export default class Surface {
         yFloor = {max: 20,type: -1}
         length = Math.round(0.01 * this.width)
         xEnd = xStart + length
-        xTravel = Math.round(length * 0.3)
+        xTravel = Math.round(length * 0.6)
 
         break
 
