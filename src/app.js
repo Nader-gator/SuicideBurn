@@ -1,11 +1,14 @@
 import Ship from './ship'
 import Surface from './surface'
 import Game from './game_handler'
-  export const width = 3000
-  export const height = window.innerHeight -75
+import {generateHighScoreForm} from './high_scores_utl'
+export const width = 3000
+export const height = window.innerHeight -75
 
+// generateHighScoreForm(850)
 export const newGame = (e,fresh = true)=>{
-const canvasEl = document.getElementById('layer1')
+
+  const canvasEl = document.getElementById('layer1')
   const ctx = canvasEl.getContext("2d")
 
   const shipcanvasEl = document.getElementById('layer2')
@@ -57,10 +60,12 @@ const canvasEl = document.getElementById('layer1')
           document.body.onkeyup = null
         }
       }
-    }else{game.start()
-    document.body.onkeyup = null
+    }else{
+      game.start()
+      document.body.onkeyup = null
     }
 
 }
 
 document.addEventListener("DOMContentLoaded", newGame)
+

@@ -114,7 +114,7 @@ export default class Ship {
     if(this.fire){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-      this.fuel -= 10
+      this.fuel -= 5
     }
     if (this.firing){
       this.fireEngine()
@@ -203,7 +203,7 @@ export default class Ship {
     text.textAlign = "center";
     if (status === 'good'){
       ctx.rect(window.innerWidth * 0.3, window.innerHeight / 7,
-      window.innerWidth * 0.4, window.innerHeight / 1.5);
+      window.innerWidth * 0.4, window.innerHeight / 1.8);
       text.fillText(`The Eagle Has Landed!`, window.innerWidth * 0.5, window.innerHeight / 4)
     } else if(status === 'bad') {
       ctx.rect(

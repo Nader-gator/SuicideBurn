@@ -11,13 +11,24 @@
 
 <body style="margin: 0">
 
-<div style="position: relative;">
+<div style="position: relative;position: absolute; top: 0;left: 0;">
   <canvas id="layer1" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
   <canvas id="layer2" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
   <canvas id="layer3" style="position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
   <canvas id="layer4" style="position: absolute; left: 0; top: 0; z-index: 3;"></canvas>
 </div>
-
+<div style='position: absolute;
+ top: 28%;
+ left: 30%; 
+ z-index: 50;
+ width: 45%;
+ 
+ '>
+  <ul id='high-score-name' style='color: white;display:inline-block;
+ float:none;list-style-type: none;font-size: 36px;margin-right: 37%' ></ul>
+  <ul id='high-score-score' style='color: white;display:inline-block;
+ float:none;list-style-type: none;font-size: 36px;text-align: right' ></ul>
+</div>
 </body>
 
 

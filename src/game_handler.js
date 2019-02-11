@@ -1,4 +1,6 @@
 import {newGame} from './app'
+import {generateHighScoreForm,clearForm} from './high_scores_utl'
+
 export default class GameHandler{
   constructor(surface, ship){
     this.ship = ship
@@ -60,13 +62,17 @@ export default class GameHandler{
         clearInterval(this.interval)
         if (this.checkLanding()){
           this.ship.result('good')
+          generateHighScoreForm(this.ship.fuel)
           document.body.onkeyup = function (e) {
-            if (e.keyCode == 32) {
-              newGame(null, false)
+            if (e.keyCode == 13){
+            clearForm()
+            newGame(null, false)
             }
+
           }
         } else {
           this.ship.result('bad')
+          // generateHighScoreForm(this.ship.fuel)
           document.body.onkeyup = function (e) {
             if (e.keyCode == 32) {
               newGame(null, false)
