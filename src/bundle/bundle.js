@@ -10689,7 +10689,6 @@ var fetchCodes = function fetchCodes() {
   });
 };
 var postCodes = function postCodes(name, score) {
-  debugger;
   return jQuery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
     method: 'post',
     url: 'https://suicideburn-c33de.firebaseio.com/.json',
@@ -10706,7 +10705,7 @@ var checkIfScoreIsgood = function checkIfScoreIsgood(score, scores) {
   });
   arr = arr.sort(function (a, b) {
     return a - b;
-  }).reverse(); // debugger
+  }).reverse();
 
   for (var i = 0; i < arr.length; i++) {
     if (arr[i] < score) {
@@ -10753,7 +10752,7 @@ var produceUl = function produceUl(scoresArray, rank, score) {
 
       var _newli = document.createElement("li");
 
-      _newli.appendChild(document.createTextNode("test"));
+      _newli.appendChild(document.createTextNode(score));
 
       sul.appendChild(_newli);
     }
@@ -10879,7 +10878,7 @@ function () {
     this.gravity = options.gravity;
     this.statsCtx = options.statsCtx;
     this.textCtx = options.textCtx;
-    this.fuel = 6000;
+    this.fuel = 5000;
     this.ctx.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
     this.ctx.width = _app__WEBPACK_IMPORTED_MODULE_0__["width"];
     this.offset = 90;
@@ -10993,7 +10992,7 @@ function () {
       this.ctx.clearRect(this.x - 10, this.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
       this.drawStats();
 
-      if (this.fuel < 2) {
+      if (this.fuel < 8) {
         this.firing = false;
         this.fire = false;
       }
@@ -11001,7 +11000,7 @@ function () {
       if (this.fire) {
         var shipFiring = document.getElementById("ship-firing");
         this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-        this.fuel -= 10;
+        this.fuel -= 8;
       }
 
       if (this.firing) {
@@ -11023,15 +11022,15 @@ function () {
       ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
       ctx.fill();
       ctx.stroke();
-      text.clearRect(window.innerWidth * 0.865, 30, 160, 90);
+      text.clearRect(0, 0, window.innerWidth, window.innerHeight);
       text.beginPath();
       text.font = "normal 13px Arial ";
       text.fillStyle = "grey";
       text.lineWidth = "1";
-      text.textAlign = "right";
-      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.965, 60);
-      text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.965, 80);
-      text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.965, 100);
+      text.textAlign = "left";
+      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.872, 60);
+      text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.872, 80);
+      text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.872, 100);
     }
   }, {
     key: "preGame",
@@ -11078,7 +11077,7 @@ function () {
       text.textAlign = "center";
 
       if (status === 'good') {
-        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 7, window.innerWidth * 0.4, window.innerHeight / 1.8);
+        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 6, window.innerWidth * 0.4, window.innerHeight / 2);
         text.fillText("The Eagle Has Landed!", window.innerWidth * 0.5, window.innerHeight / 4);
       } else if (status === 'bad') {
         ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 4.5);

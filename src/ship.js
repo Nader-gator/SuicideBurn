@@ -13,7 +13,7 @@ export default class Ship {
     this.gravity= options.gravity
     this.statsCtx = options.statsCtx
     this.textCtx = options.textCtx
-    this.fuel = 6000
+    this.fuel = 5000
 
     this.ctx.height = height
     this.ctx.width = width
@@ -111,14 +111,14 @@ export default class Ship {
 
       this.drawStats()
 
-    if (this.fuel < 2) {
+    if (this.fuel < 8) {
       this.firing = false
       this.fire = false
     }
     if(this.fire){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-      this.fuel -= 10
+      this.fuel -= 8
     }
     if (this.firing){
       this.fireEngine()
@@ -143,16 +143,16 @@ export default class Ship {
     ctx.stroke();
 
 
-    text.clearRect(window.innerWidth * 0.865, 30, 160, 90)
+    text.clearRect(0, 0, window.innerWidth, window.innerHeight)
     text.beginPath();
     text.font = "normal 13px Arial ";
     text.fillStyle = "grey";
     text.lineWidth = "1"
-    text.textAlign = "right";
-    text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.965, 60)
+    text.textAlign = "left";
+    text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.872, 60)
 
-    text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.965, 80)
-    text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.965, 100)
+    text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.872, 80)
+    text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.872, 100)
   }
 
   preGame(){
@@ -206,8 +206,11 @@ export default class Ship {
     text.lineWidth = "1"
     text.textAlign = "center";
     if (status === 'good'){
-      ctx.rect(window.innerWidth * 0.3, window.innerHeight / 7,
-      window.innerWidth * 0.4, window.innerHeight / 1.8);
+      ctx.rect(
+          window.innerWidth * 0.3,
+         window.innerHeight / 6,
+        window.innerWidth * 0.4,
+        window.innerHeight / 2);
       text.fillText(`The Eagle Has Landed!`, window.innerWidth * 0.5, window.innerHeight / 4)
     } else if(status === 'bad') {
       ctx.rect(
@@ -216,7 +219,6 @@ export default class Ship {
          
         window.innerWidth * 0.35, 
         window.innerHeight / 4.5);
-
       text.fillText(`You left a 2 mile crater on the Moon!`, window.innerWidth * 0.5, window.innerHeight / 4)
       text.fillText(`Press space to start a new game`, window.innerWidth * 0.5, window.innerHeight / 3)
 

@@ -7,7 +7,6 @@ import $ from 'jQuery'
     })
   }
 export const postCodes=(name, score)=>{
-  debugger
     return $.ajax({
       method: 'post',
       url: 'https://suicideburn-c33de.firebaseio.com/.json',
@@ -24,7 +23,6 @@ export const checkIfScoreIsgood=(score,scores)=>{
       arr.push(el.score)
     })
      arr = arr.sort(function(a, b){return a - b}).reverse()
-    // debugger
      for (let i = 0; i < arr.length; i++) {
         if (arr[i] < score){
           return i
@@ -68,7 +66,7 @@ export const produceUl=(scoresArray,rank,score)=>{
       if (i === scoresArray.length - 1 && !placed && rank){
         createForm(ul,score)
         let newli = document.createElement("li")
-        newli.appendChild(document.createTextNode(`test`))
+        newli.appendChild(document.createTextNode(score))
         sul.appendChild(newli);
       }
     })
