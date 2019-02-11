@@ -2,10 +2,10 @@ import Ship from './ship'
 import Surface from './surface'
 import Game from './game_handler'
   export const width = 3000
-  export const height = 700
+  export const height = window.innerHeight -75
 
-document.addEventListener("DOMContentLoaded",() => {
-  const canvasEl = document.getElementById('layer1')
+export const newGame = (e,fresh = true)=>{
+const canvasEl = document.getElementById('layer1')
   const ctx = canvasEl.getContext("2d")
 
   const shipcanvasEl = document.getElementById('layer2')
@@ -46,9 +46,21 @@ document.addEventListener("DOMContentLoaded",() => {
     gravity: surface.gravity,
     statsCtx,
     textCtx
-      }
-      )
+      })
   const game = new Game(surface,ship)
 
-  game.start()
-})
+    if (fresh === true) {
+      game.preGame()
+      document.body.onkeyup = function (e) {
+        if (e.keyCode == 32) {
+          game.start()
+          document.body.onkeyup = null
+        }
+      }
+    }else{game.start()
+    document.body.onkeyup = null
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", newGame)

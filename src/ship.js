@@ -130,7 +130,6 @@ export default class Ship {
     const ctx = this.statsCtx
     const text = this.textCtx
     
-    debugger
     ctx.beginPath();
     ctx.lineWidth = "1";
     ctx.strokeStyle = "white";
@@ -146,10 +145,80 @@ export default class Ship {
     text.fillStyle = "grey";
     text.lineWidth = "1"
     text.textAlign = "right";
-    console.log(this.vSpeed)
-    text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.955, 60)
+    text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.965, 60)
 
-    text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.955, 80)
-    text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.955, 100)
+    text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.965, 80)
+    text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.965, 100)
+  }
+
+  preGame(){
+    const ctx = this.statsCtx
+    const text = this.textCtx
+
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "#252626"
+    ctx.rect(
+      window.innerWidth * 0.175,
+      window.innerHeight / 5,
+      window.innerWidth*0.65,
+      window.innerHeight /4);
+    ctx.fill()
+    ctx.stroke();
+
+    text.beginPath();
+    text.font = "normal 18px Arial ";
+    text.fillStyle = "white";
+    text.lineWidth = "1"
+    text.textAlign = "center";
+    text.fillText(`Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.`, window.innerWidth * 0.5 , window.innerHeight / 3.9)
+    
+    text.fillText(`fire your engine by pressing space, and rotate the ship by left and right arrow keys`, window.innerWidth * 0.5, window.innerHeight / 3.2)
+    text.fillText(`press SPACE to START`, window.innerWidth * 0.5, window.innerHeight / 2.5)
+  }
+
+  clearCanvas(){
+    const ctx = this.statsCtx
+    const text = this.textCtx
+
+    ctx.clearRect(0, 0, width, height);
+    text.clearRect(0, 0, width, height);
+  }
+
+  result(status){
+    const ctx = this.statsCtx
+    const text = this.textCtx
+
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "#252626"
+
+
+    text.beginPath();
+    text.font = "normal 25px Arial ";
+    text.fillStyle = "white";
+    text.lineWidth = "1"
+    text.textAlign = "center";
+    if (status === 'good'){
+      ctx.rect(window.innerWidth * 0.3, window.innerHeight / 7,
+      window.innerWidth * 0.4, window.innerHeight / 1.5);
+      text.fillText(`The Eagle Has Landed!`, window.innerWidth * 0.5, window.innerHeight / 4)
+    } else if(status === 'bad') {
+      ctx.rect(
+        window.innerWidth * 0.325,
+         window.innerHeight / 6,
+         
+        window.innerWidth * 0.35, 
+        window.innerHeight / 4.5);
+
+      text.fillText(`You left a 2 mile crater on the Moon!`, window.innerWidth * 0.5, window.innerHeight / 4)
+      text.fillText(`Press space to start a new game`, window.innerWidth * 0.5, window.innerHeight / 3)
+
+    }
+
+    ctx.fill()
+    ctx.stroke();
   }
 }

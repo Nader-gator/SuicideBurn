@@ -90,13 +90,14 @@
 /*!********************!*\
   !*** ./src/app.js ***!
   \********************/
-/*! exports provided: width, height */
+/*! exports provided: width, height, newGame */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "width", function() { return width; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "height", function() { return height; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGame", function() { return newGame; });
 /* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ship */ "./src/ship.js");
 /* harmony import */ var _surface__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./surface */ "./src/surface.js");
 /* harmony import */ var _game_handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game_handler */ "./src/game_handler.js");
@@ -104,8 +105,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var width = 3000;
-var height = 700;
-document.addEventListener("DOMContentLoaded", function () {
+var height = window.innerHeight - 75;
+var newGame = function newGame(e) {
+  var fresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var canvasEl = document.getElementById('layer1');
   var ctx = canvasEl.getContext("2d");
   var shipcanvasEl = document.getElementById('layer2');
@@ -140,8 +142,22 @@ document.addEventListener("DOMContentLoaded", function () {
     textCtx: textCtx
   });
   var game = new _game_handler__WEBPACK_IMPORTED_MODULE_2__["default"](surface, ship);
-  game.start();
-});
+
+  if (fresh === true) {
+    game.preGame();
+
+    document.body.onkeyup = function (e) {
+      if (e.keyCode == 32) {
+        game.start();
+        document.body.onkeyup = null;
+      }
+    };
+  } else {
+    game.start();
+    document.body.onkeyup = null;
+  }
+};
+document.addEventListener("DOMContentLoaded", newGame);
 
 /***/ }),
 
@@ -155,11 +171,14 @@ document.addEventListener("DOMContentLoaded", function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return GameHandler; });
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
 
 var GameHandler =
 /*#__PURE__*/
@@ -199,19 +218,25 @@ function () {
       }
 
       if (Math.abs(fY - lY) <= 5 && Math.abs(fX - lX) > 20 && this.ship.vSpeed < 0.35 && Math.abs(this.ship.hSpeed) < 0.2 && (this.ship.angle === 0 || this.ship.angle === -10 || this.ship.angle === 10)) {
-        console.log('good');
+        return true;
       } else {
-        console.log('bad'); // console.log(Math.abs(fY - lY))
+        return false; // console.log(Math.abs(fY - lY))
         // console.log(Math.abs(fX - lX))
         // console.log((this.ship.vSpeed))
         // console.log(Math.abs(this.ship.hSpeed))
       }
     }
   }, {
+    key: "preGame",
+    value: function preGame() {
+      this.ship.preGame();
+    }
+  }, {
     key: "start",
     value: function start() {
       var _this = this;
 
+      this.ship.clearCanvas();
       this.interval = setInterval(function () {
         _this.ship.step();
 
@@ -224,7 +249,23 @@ function () {
 
           clearInterval(_this.interval);
 
-          _this.checkLanding();
+          if (_this.checkLanding()) {
+            _this.ship.result('good');
+
+            document.body.onkeyup = function (e) {
+              if (e.keyCode == 32) {
+                Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+              }
+            };
+          } else {
+            _this.ship.result('bad');
+
+            document.body.onkeyup = function (e) {
+              if (e.keyCode == 32) {
+                Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+              }
+            };
+          }
         }
       }, 20);
     }
@@ -435,7 +476,6 @@ function () {
     value: function drawStats() {
       var ctx = this.statsCtx;
       var text = this.textCtx;
-      debugger;
       ctx.beginPath();
       ctx.lineWidth = "1";
       ctx.strokeStyle = "white";
@@ -449,10 +489,65 @@ function () {
       text.fillStyle = "grey";
       text.lineWidth = "1";
       text.textAlign = "right";
-      console.log(this.vSpeed);
-      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.955, 60);
-      text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.955, 80);
-      text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.955, 100);
+      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.965, 60);
+      text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.965, 80);
+      text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.965, 100);
+    }
+  }, {
+    key: "preGame",
+    value: function preGame() {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.beginPath();
+      ctx.lineWidth = "1";
+      ctx.strokeStyle = "white";
+      ctx.fillStyle = "#252626";
+      ctx.rect(window.innerWidth * 0.175, window.innerHeight / 5, window.innerWidth * 0.65, window.innerHeight / 4);
+      ctx.fill();
+      ctx.stroke();
+      text.beginPath();
+      text.font = "normal 18px Arial ";
+      text.fillStyle = "white";
+      text.lineWidth = "1";
+      text.textAlign = "center";
+      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
+      text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
+      text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
+    }
+  }, {
+    key: "clearCanvas",
+    value: function clearCanvas() {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
+      text.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
+    }
+  }, {
+    key: "result",
+    value: function result(status) {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.beginPath();
+      ctx.lineWidth = "1";
+      ctx.strokeStyle = "white";
+      ctx.fillStyle = "#252626";
+      text.beginPath();
+      text.font = "normal 25px Arial ";
+      text.fillStyle = "white";
+      text.lineWidth = "1";
+      text.textAlign = "center";
+
+      if (status === 'good') {
+        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 7, window.innerWidth * 0.4, window.innerHeight / 1.5);
+        text.fillText("The Eagle Has Landed!", window.innerWidth * 0.5, window.innerHeight / 4);
+      } else if (status === 'bad') {
+        ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 4.5);
+        text.fillText("You left a 2 mile crater on the Moon!", window.innerWidth * 0.5, window.innerHeight / 4);
+        text.fillText("Press space to start a new game", window.innerWidth * 0.5, window.innerHeight / 3);
+      }
+
+      ctx.fill();
+      ctx.stroke();
     }
   }]);
 

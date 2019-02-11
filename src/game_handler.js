@@ -1,3 +1,4 @@
+import {newGame} from './app'
 export default class GameHandler{
   constructor(surface, ship){
     this.ship = ship
@@ -35,9 +36,9 @@ export default class GameHandler{
     && (Math.abs(this.ship.hSpeed) < 0.2)
     && (this.ship.angle === 0 || this.ship.angle === -10 || this.ship.angle === 10)
     ){
-      console.log('good')
+      return true
     }else{
-      console.log('bad')
+      return false
       // console.log(Math.abs(fY - lY))
       // console.log(Math.abs(fX - lX))
       // console.log((this.ship.vSpeed))
@@ -45,7 +46,11 @@ export default class GameHandler{
     }
   }
 
+  preGame(){
+    this.ship.preGame()
+  }
   start(){
+    this.ship.clearCanvas()
     this.interval = setInterval(() => {
       this.ship.step()
       this.ship.render()
@@ -53,7 +58,22 @@ export default class GameHandler{
         this.ship.fire = false
         this.ship.render()
         clearInterval(this.interval)
-        this.checkLanding()
+        if (this.checkLanding()){
+          this.ship.result('good')
+          document.body.onkeyup = function (e) {
+            if (e.keyCode == 32) {
+              newGame(null, false)
+            }
+          }
+        } else {
+          this.ship.result('bad')
+          document.body.onkeyup = function (e) {
+            if (e.keyCode == 32) {
+              newGame(null, false)
+            }
+          }
+          
+        }
       }
     }, 20);
 
