@@ -19,14 +19,13 @@ The core Lunar Lander game does not have any variations, however there are many 
 
 With this Lunar Lander game, users will be able to:
 
-- [ ] Start and pause pause
 - [x] Rotate the ship and fire the engine
-- [ ] keep track of the high scores
+- [x] keep track of the high scores
 
 In addition, this project will include:
 
-- [ ] An About modal describing the background and rules of the game
-- [ ] A production README
+- [x] An About modal describing the background and rules of the game
+- [x] A production README
 
 ### Wireframes
 
@@ -76,8 +75,8 @@ In addition to the entry file, there will be three scripts involved in this proj
 
 - [x] Add logic needed to start, pause, and finish the game
 - [ ] Add difficulty level
-- [ ] Add persistent high score tracking
-- [ ] Add 'about' modal
+- [x] Add persistent high score tracking
+- [x] Add 'about' modal
 
 
 **Day 4**: add bonus assistance features. Goals for the day:
