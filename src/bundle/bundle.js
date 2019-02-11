@@ -11045,7 +11045,7 @@ function () {
       text.fillStyle = "white";
       text.lineWidth = "1";
       text.textAlign = "center";
-      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
+      text.fillText("Welcome to SuicideBurn, the objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
       text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
       text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
     }
