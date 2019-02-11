@@ -10879,7 +10879,7 @@ function () {
     this.gravity = options.gravity;
     this.statsCtx = options.statsCtx;
     this.textCtx = options.textCtx;
-    this.fuel = 5000;
+    this.fuel = 6000;
     this.ctx.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
     this.ctx.width = _app__WEBPACK_IMPORTED_MODULE_0__["width"];
     this.offset = 90;
@@ -10993,10 +10993,15 @@ function () {
       this.ctx.clearRect(this.x - 10, this.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
       this.drawStats();
 
+      if (this.fuel < 2) {
+        this.firing = false;
+        this.fire = false;
+      }
+
       if (this.fire) {
         var shipFiring = document.getElementById("ship-firing");
         this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-        this.fuel -= 5;
+        this.fuel -= 10;
       }
 
       if (this.firing) {
@@ -11045,7 +11050,7 @@ function () {
       text.fillStyle = "white";
       text.lineWidth = "1";
       text.textAlign = "center";
-      text.fillText("Welcome to SuicideBurn, the objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
+      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
       text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
       text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
     }

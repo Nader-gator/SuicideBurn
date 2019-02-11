@@ -13,7 +13,7 @@ export default class Ship {
     this.gravity= options.gravity
     this.statsCtx = options.statsCtx
     this.textCtx = options.textCtx
-    this.fuel = 5000
+    this.fuel = 6000
 
     this.ctx.height = height
     this.ctx.width = width
@@ -99,6 +99,7 @@ export default class Ship {
       this.fire = true
     }
     this.ctx.translate(-1*(offsetX), -1*(offsetY))
+
   }
   
   render(){
@@ -110,11 +111,14 @@ export default class Ship {
 
       this.drawStats()
 
-
+    if (this.fuel < 2) {
+      this.firing = false
+      this.fire = false
+    }
     if(this.fire){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-      this.fuel -= 5
+      this.fuel -= 10
     }
     if (this.firing){
       this.fireEngine()
