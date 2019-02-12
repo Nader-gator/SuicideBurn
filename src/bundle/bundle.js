@@ -10930,7 +10930,7 @@ var renderHistory = function renderHistory(ship) {
   var y = ship.history[0][1] + 15;
   var xe = ship.history[ship.history.length - 1][0] + 15;
   var ye = ship.history[ship.history.length - 1][1] + 15;
-  var xc = (x + xe - 80) / 2;
+  var xc = (x + xe) / 2;
   var yc = (y + ye - 80) / 2;
   ctx.moveTo(x, y);
   ctx.quadraticCurveTo(xc, yc, xe, ye); // ctx.lineTo(x, y);
@@ -11154,7 +11154,7 @@ function () {
       }
 
       if (this.fuel < 500) {
-        style.fuel = red;
+        style.fuel = 'red';
       }
 
       return style;

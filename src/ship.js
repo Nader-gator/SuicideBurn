@@ -171,7 +171,7 @@ export default class Ship {
       style.hSpeed = 'red'
     }
     if (this.fuel < 500){
-      style.fuel = red
+      style.fuel = 'red'
     }
     
     return style

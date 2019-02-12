@@ -60,8 +60,8 @@ export const renderHistory=(ship)=>{
       let xe = ship.history[ship.history.length - 1][0] + 15
       let ye = ship.history[ship.history.length - 1][1] + 15
       
-      let xc = (x + xe-80) /2
-      let yc= ((y+ye)-80) /2
+      let xc = (x + xe ) /2
+      let yc= ((y+ye)-80 ) /2
       
       ctx.moveTo(x,y)
       ctx.quadraticCurveTo(xc, yc, xe, ye)
