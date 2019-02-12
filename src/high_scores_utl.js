@@ -30,7 +30,6 @@ export const checkIfScoreIsgood=(score,scores)=>{
           return -1
         }
      }
-
      return arr.length
 
 }

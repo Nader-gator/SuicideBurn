@@ -1,6 +1,7 @@
 import {width,height} from './app'
 
-"hSpeed = pixes/ms"
+
+
 export default class Ship {
   constructor(options){
     this.hSpeed = options.hSpeed
@@ -24,6 +25,8 @@ export default class Ship {
     this.fire = false
     this.firing = false
     this.step = this.step.bind(this)
+    this.history = []
+    this.assist = false
   }
 
   radians(deg){
@@ -33,12 +36,11 @@ export default class Ship {
 
     const x = this.calculateX()
     const y = this.calculateY()
-
+    this.history.push([this.boardX,this.boardY])
     this.boardX= this.boardX + this.hSpeed
     this.boardY= this.boardY + this.vSpeed
     this.x = x
     this.y = y
-
   }
 
   fireEngine(){
@@ -133,7 +135,7 @@ export default class Ship {
   drawStats(){
     const ctx = this.statsCtx
     const text = this.textCtx
-    
+
     ctx.beginPath();
     ctx.lineWidth = "1";
     ctx.strokeStyle = "white";
@@ -158,7 +160,8 @@ export default class Ship {
   preGame(){
     const ctx = this.statsCtx
     const text = this.textCtx
-
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+    text.clearRect(0, 0, window.innerWidth, window.innerHeight)
     ctx.beginPath();
     ctx.lineWidth = "1";
     ctx.strokeStyle = "white";
@@ -167,7 +170,7 @@ export default class Ship {
       window.innerWidth * 0.175,
       window.innerHeight / 5,
       window.innerWidth*0.65,
-      window.innerHeight /4);
+      window.innerHeight /3.2);
     ctx.fill()
     ctx.stroke();
 
@@ -180,6 +183,21 @@ export default class Ship {
     
     text.fillText(`fire your engine by pressing space, and rotate the ship by left and right arrow keys`, window.innerWidth * 0.5, window.innerHeight / 3.2)
     text.fillText(`press SPACE to START`, window.innerWidth * 0.5, window.innerHeight / 2.5)
+    if (this.assist){
+      text.fillStyle = "red";
+      text.fillText(`press A to disable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
+    }else {
+      text.fillStyle = "red";
+      text.fillText(`press A to enable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
+    }
+      window.onkeyup = (e) => {
+        debugger
+        if (e.keyCode === 65) {
+          this.assist = !this.assist
+          this.preGame()
+        }
+      }
+
   }
 
   clearCanvas(){

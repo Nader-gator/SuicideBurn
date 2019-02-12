@@ -1,5 +1,6 @@
 import {newGame} from './app'
 import {generateHighScoreForm,clearForm} from './high_scores_utl'
+import {predictPath} from './predictor'
 
 export default class GameHandler{
   constructor(surface, ship){
@@ -56,13 +57,22 @@ export default class GameHandler{
     this.interval = setInterval(() => {
       this.ship.step()
       this.ship.render()
+      if (this.ship.assist){
+        this.predict()
+      }
       if (this.isOver()){
         this.ship.fire = false
         this.ship.render()
         clearInterval(this.interval)
         if (this.checkLanding()){
           this.ship.result('good')
-          generateHighScoreForm(this.ship.fuel)
+          if (this.ship.assist){
+            generateHighScoreForm(0)
+          }else{
+            generateHighScoreForm(this.ship.fuel)
+          }
+
+
           document.body.onkeyup = function (e) {
             if (e.keyCode == 13){
             clearForm()
@@ -82,7 +92,9 @@ export default class GameHandler{
         }
       }
     }, 20);
+  }
 
-
+  predict(){
+    predictPath(this.ship,this.surface)
   }
 }
