@@ -36,7 +36,7 @@ export default class Ship {
 
     const x = this.calculateX()
     const y = this.calculateY()
-    this.history.push([this.boardX,this.boardY])
+    this.history.push([this.boardX+15,this.boardY+15])
     this.boardX= this.boardX + this.hSpeed
     this.boardY= this.boardY + this.vSpeed
     this.x = x

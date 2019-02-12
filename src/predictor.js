@@ -32,9 +32,7 @@ export const predictPath = (ship,surface) => {
       gravity: surface.gravity,
       fuel: 9001
     })
-    if (checkSafe(mockShip2,surface)){
-      mockShip.history.push('MARK')
-    }
+
   }
   renderHistory(mockShip, ctx)
 }
@@ -74,54 +72,19 @@ export const renderHistory=(ship)=>{
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
   ctx.strokeStyle = "white"
   ctx.lineWidth = 0.5
-  // let initialX = ship.boardX
-  // let initialY = ship.boardY
-  
+
   ctx.beginPath();
-  let markIdx = ship.history.indexOf("MARK")
-    if (markIdx > 0){
-      // debugger
-      let x = ship.history[0][0] + 15
-      let y = ship.history[0][1] + 15
-      let xe = ship.history[markIdx][0] + 15
-      let ye = ship.history[markIdx][1] + 15
 
-      let xc = (x + xe) / 2
-      let yc = ((y + ye) - 80) / 2
+    ctx.moveTo(ship.history[0][0], ship.history[0][1]);
 
-      ctx.moveTo(x, y)
-      ctx.quadraticCurveTo(xc, yc, xe, ye)
-      ctx.strokeStyle ='red'
-      ctx.stroke();
-      x = ship.history[markIdx][0] + 15
-      y = ship.history[markIdx][1] + 15
-      xe = ship.history[ship.history.length - 1][0] + 15
-      ye = ship.history[ship.history.length - 1][1] + 15
-
-      xc = (x + xe) / 2
-      yc = ((y + ye) - 80) / 2
-
-      ctx.moveTo(x, y)
-      ctx.quadraticCurveTo(xc, yc, xe, ye)
-      ctx.strokeStyle ='white'
-      ctx.stroke();
-    }else{
-      let x = ship.history[0][0] + 15
-      let y = ship.history[0][1] + 15
-      let xe = ship.history[ship.history.length - 1][0] + 15
-      let ye = ship.history[ship.history.length - 1][1] + 15
-
-      let xc = (x + xe) / 2
-      let yc = ((y + ye) - 80) / 2
-
-      ctx.moveTo(x, y)
-      ctx.quadraticCurveTo(xc, yc, xe, ye)
-      ctx.strokeStyle = "white"
-      ctx.stroke();
+  let i
+    for (i = 1; i < ship.history.length - 2; i++) {
+      var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
+      var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
+      ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
     }
-      
-      // ctx.lineTo(x, y);
-      // ctx.lineTo(xe, ye);
+    // curve through the last two ship.history
+    ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
   
-  // ctx.stroke();
+  ctx.stroke();
 }

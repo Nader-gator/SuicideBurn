@@ -10911,10 +10911,6 @@ var predictPath = function predictPath(ship, surface) {
       gravity: surface.gravity,
       fuel: 9001
     });
-
-    if (checkSafe(mockShip2, surface)) {
-      mockShip.history.push('MARK');
-    }
   }
 
   renderHistory(mockShip, ctx);
@@ -10950,55 +10946,20 @@ var renderHistory = function renderHistory(ship) {
   canvasEl.width = window.innerWidth;
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 0.5; // let initialX = ship.boardX
-  // let initialY = ship.boardY
-
+  ctx.lineWidth = 0.5;
   ctx.beginPath();
-  var markIdx = ship.history.indexOf("MARK");
+  ctx.moveTo(ship.history[0][0], ship.history[0][1]);
+  var i;
 
-  if (markIdx > 0) {
-    // debugger
-    var x = ship.history[0][0] + 15;
-    var y = ship.history[0][1] + 15;
-    var xe = ship.history[markIdx][0] + 15;
-    var ye = ship.history[markIdx][1] + 15;
-    var xc = (x + xe) / 2;
-    var yc = (y + ye - 80) / 2;
-    ctx.moveTo(x, y);
-    ctx.quadraticCurveTo(xc, yc, xe, ye);
-    ctx.strokeStyle = 'red';
-    ctx.stroke();
-    x = ship.history[markIdx][0] + 15;
-    y = ship.history[markIdx][1] + 15;
-    xe = ship.history[ship.history.length - 1][0] + 15;
-    ye = ship.history[ship.history.length - 1][1] + 15;
-    xc = (x + xe) / 2;
-    yc = (y + ye - 80) / 2;
-    ctx.moveTo(x, y);
-    ctx.quadraticCurveTo(xc, yc, xe, ye);
-    ctx.strokeStyle = 'white';
-    ctx.stroke();
-  } else {
-    var _x = ship.history[0][0] + 15;
+  for (i = 1; i < ship.history.length - 2; i++) {
+    var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
+    var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
+    ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
+  } // curve through the last two ship.history
 
-    var _y = ship.history[0][1] + 15;
 
-    var _xe = ship.history[ship.history.length - 1][0] + 15;
-
-    var _ye = ship.history[ship.history.length - 1][1] + 15;
-
-    var _xc = (_x + _xe) / 2;
-
-    var _yc = (_y + _ye - 80) / 2;
-
-    ctx.moveTo(_x, _y);
-    ctx.quadraticCurveTo(_xc, _yc, _xe, _ye);
-    ctx.strokeStyle = "white";
-    ctx.stroke();
-  } // ctx.lineTo(x, y);
-  // ctx.lineTo(xe, ye);
-  // ctx.stroke();
-
+  ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
+  ctx.stroke();
 };
 
 /***/ }),
@@ -11062,7 +11023,7 @@ function () {
     value: function step() {
       var x = this.calculateX();
       var y = this.calculateY();
-      this.history.push([this.boardX, this.boardY]);
+      this.history.push([this.boardX + 15, this.boardY + 15]);
       this.boardX = this.boardX + this.hSpeed;
       this.boardY = this.boardY + this.vSpeed;
       this.x = x;
