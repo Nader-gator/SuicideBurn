@@ -26,7 +26,7 @@ export default class Ship {
     this.firing = false
     this.step = this.step.bind(this)
     this.history = []
-    this.assist = false
+    this.assist = true
   }
 
   radians(deg){
@@ -138,23 +138,44 @@ export default class Ship {
 
     ctx.beginPath();
     ctx.lineWidth = "1";
-    ctx.strokeStyle = "white";
+    
     ctx.fillStyle="black"
     ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
     ctx.fill()
     ctx.stroke();
 
-
+    ctx.strokeStyle = "white";
     text.clearRect(0, 0, window.innerWidth, window.innerHeight)
     text.beginPath();
     text.font = "normal 13px Arial ";
-    text.fillStyle = "grey";
     text.lineWidth = "1"
     text.textAlign = "left";
+    
+    let style = this.changeStyle()
+    
+    
+    text.fillStyle = style.hSpeed;
     text.fillText(`Horizontal Speed: ${Math.ceil(this.hSpeed * 100)}`, window.innerWidth * 0.872, 60)
-
+    text.fillStyle = style.vSpeed;
     text.fillText(`Vertical Speed: ${Math.ceil(this.vSpeed * 100)}`, window.innerWidth * 0.872, 80)
+    text.fillStyle = style.fuel;
     text.fillText(`Fuel: ${Math.ceil(this.fuel)}`, window.innerWidth * 0.872, 100)
+  }
+
+  changeStyle(){
+    let style = {hSpeed: 'grey',vSpeed: 'grey',fuel:'grey'}
+    if (this.vSpeed > 0.35) {
+      style.vSpeed = 'red'
+    }
+    if (Math.abs(this.hSpeed) > 0.2){
+      style.hSpeed = 'red'
+    }
+    if (this.fuel < 500){
+      style.fuel = red
+    }
+    
+    return style
+
   }
 
   preGame(){
@@ -191,7 +212,6 @@ export default class Ship {
       text.fillText(`press A to enable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
     }
       window.onkeyup = (e) => {
-        debugger
         if (e.keyCode === 65) {
           this.assist = !this.assist
           this.preGame()

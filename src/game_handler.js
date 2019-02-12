@@ -66,29 +66,34 @@ export default class GameHandler{
         clearInterval(this.interval)
         if (this.checkLanding()){
           this.ship.result('good')
+          let ranked
           if (this.ship.assist){
-            generateHighScoreForm(0)
+            ranked = generateHighScoreForm(0)
           }else{
-            generateHighScoreForm(this.ship.fuel)
+            ranked = generateHighScoreForm(this.ship.fuel)
           }
 
-
-          document.body.onkeyup = function (e) {
-            if (e.keyCode == 13){
-            clearForm()
-            newGame(null, false)
+          setTimeout(() => {
+            document.body.onkeyup = function (e) {
+              if ((ranked ? e.keyCode == 13 : e.keyCode == 32)) {
+                clearForm()
+                newGame(null, false)
+              }
             }
-
-          }
-        } else {
-          this.ship.result('bad')
-          // generateHighScoreForm(this.ship.fuel)
-          document.body.onkeyup = function (e) {
-            if (e.keyCode == 32) {
-              newGame(null, false)
-            }
-          }
+          }, 500);
           
+        } else {
+          
+          setTimeout(() => {
+            this.ship.result('bad')
+            // generateHighScoreForm(this.ship.fuel)
+            debugger
+            document.body.onkeyup = function (e) {
+              if (e.keyCode == 32) {
+                newGame(null, false)
+              }
+            }
+          }, 500);
         }
       }
     }, 20);

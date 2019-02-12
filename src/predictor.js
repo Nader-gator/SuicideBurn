@@ -22,6 +22,7 @@ export const predictPath = (ship,surface) => {
 
   while (!checkGameOver(surface, mockShip)) {
     // debugger
+    mockShip.gravityChange()
     mockShip.step()
   }
   
@@ -52,15 +53,20 @@ export const renderHistory=(ship)=>{
   let initialY = ship.boardY
   
   ctx.beginPath();
-  // debugger
-  ship.history.forEach((touple,i) => {
-    
-      let x = touple[0] + 15
-      let y = touple[1] + 15
 
-      ctx.lineTo(x, y);
 
-  });
+      let x = ship.history[0][0] + 15
+      let y = ship.history[0][1] + 15
+      let xe = ship.history[ship.history.length - 1][0] + 15
+      let ye = ship.history[ship.history.length - 1][1] + 15
+      
+      let xc = (x + xe-15) /2
+      let yc= ((y+ye)-15) /2
+      
+      ctx.moveTo(x,y)
+      ctx.quadraticCurveTo(xc, yc, xe, ye)
+      // ctx.lineTo(x, y);
+      // ctx.lineTo(xe, ye);
   
   ctx.stroke();
 }

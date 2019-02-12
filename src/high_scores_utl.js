@@ -77,9 +77,11 @@ export const generateHighScoreForm = (score)=>{
     let arr = Object.values(scores)
     if (rank > -1){
       produceUl(arr.sort(function (a, b) {return a.score - b.score}).reverse().slice(0,4), rank,score)
+      return true
     } else {
       arr = Object.values(scores)
       produceUl(arr.sort(function (a, b) {return a.score - b.score}).reverse().slice(0,5),false,score)
+      return false
     }
   })
 }

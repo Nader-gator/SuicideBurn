@@ -10639,27 +10639,35 @@ function () {
           if (_this.checkLanding()) {
             _this.ship.result('good');
 
+            var ranked;
+
             if (_this.ship.assist) {
-              Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(0);
+              ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(0);
             } else {
-              Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(_this.ship.fuel);
+              ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(_this.ship.fuel);
             }
 
-            document.body.onkeyup = function (e) {
-              if (e.keyCode == 13) {
-                Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["clearForm"])();
-                Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
-              }
-            };
+            setTimeout(function () {
+              document.body.onkeyup = function (e) {
+                if (ranked ? e.keyCode == 13 : e.keyCode == 32) {
+                  Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["clearForm"])();
+                  Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+                }
+              };
+            }, 500);
           } else {
-            _this.ship.result('bad'); // generateHighScoreForm(this.ship.fuel)
+            setTimeout(function () {
+              _this.ship.result('bad'); // generateHighScoreForm(this.ship.fuel)
 
 
-            document.body.onkeyup = function (e) {
-              if (e.keyCode == 32) {
-                Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
-              }
-            };
+              debugger;
+
+              document.body.onkeyup = function (e) {
+                if (e.keyCode == 32) {
+                  Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+                }
+              };
+            }, 500);
           }
         }
       }, 20);
@@ -10782,11 +10790,13 @@ var generateHighScoreForm = function generateHighScoreForm(score) {
       produceUl(arr.sort(function (a, b) {
         return a.score - b.score;
       }).reverse().slice(0, 4), rank, score);
+      return true;
     } else {
       arr = Object.values(scores);
       produceUl(arr.sort(function (a, b) {
         return a.score - b.score;
       }).reverse().slice(0, 5), false, score);
+      return false;
     }
   });
 };
@@ -10892,6 +10902,7 @@ var predictPath = function predictPath(ship, surface) {
 
   while (!checkGameOver(surface, mockShip)) {
     // debugger
+    mockShip.gravityChange();
     mockShip.step();
   }
 
@@ -10914,13 +10925,17 @@ var renderHistory = function renderHistory(ship) {
   ctx.lineWidth = 0.5;
   var initialX = ship.boardX;
   var initialY = ship.boardY;
-  ctx.beginPath(); // debugger
+  ctx.beginPath();
+  var x = ship.history[0][0] + 15;
+  var y = ship.history[0][1] + 15;
+  var xe = ship.history[ship.history.length - 1][0] + 15;
+  var ye = ship.history[ship.history.length - 1][1] + 15;
+  var xc = (x + xe - 15) / 2;
+  var yc = (y + ye - 15) / 2;
+  ctx.moveTo(x, y);
+  ctx.quadraticCurveTo(xc, yc, xe, ye); // ctx.lineTo(x, y);
+  // ctx.lineTo(xe, ye);
 
-  ship.history.forEach(function (touple, i) {
-    var x = touple[0] + 15;
-    var y = touple[1] + 15;
-    ctx.lineTo(x, y);
-  });
   ctx.stroke();
 };
 
@@ -10972,7 +10987,7 @@ function () {
     this.firing = false;
     this.step = this.step.bind(this);
     this.history = [];
-    this.assist = false;
+    this.assist = true;
   }
 
   _createClass(Ship, [{
@@ -11103,20 +11118,46 @@ function () {
       var text = this.textCtx;
       ctx.beginPath();
       ctx.lineWidth = "1";
-      ctx.strokeStyle = "white";
       ctx.fillStyle = "black";
       ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
       ctx.fill();
       ctx.stroke();
+      ctx.strokeStyle = "white";
       text.clearRect(0, 0, window.innerWidth, window.innerHeight);
       text.beginPath();
       text.font = "normal 13px Arial ";
-      text.fillStyle = "grey";
       text.lineWidth = "1";
       text.textAlign = "left";
+      var style = this.changeStyle();
+      text.fillStyle = style.hSpeed;
       text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.872, 60);
+      text.fillStyle = style.vSpeed;
       text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.872, 80);
+      text.fillStyle = style.fuel;
       text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.872, 100);
+    }
+  }, {
+    key: "changeStyle",
+    value: function changeStyle() {
+      var style = {
+        hSpeed: 'grey',
+        vSpeed: 'grey',
+        fuel: 'grey'
+      };
+
+      if (this.vSpeed > 0.35) {
+        style.vSpeed = 'red';
+      }
+
+      if (Math.abs(this.hSpeed) > 0.2) {
+        style.hSpeed = 'red';
+      }
+
+      if (this.fuel < 500) {
+        style.fuel = red;
+      }
+
+      return style;
     }
   }, {
     key: "preGame",
@@ -11152,8 +11193,6 @@ function () {
       }
 
       window.onkeyup = function (e) {
-        debugger;
-
         if (e.keyCode === 65) {
           _this2.assist = !_this2.assist;
 
