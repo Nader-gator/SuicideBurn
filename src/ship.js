@@ -14,7 +14,7 @@ export default class Ship {
     this.gravity= options.gravity
     this.statsCtx = options.statsCtx
     this.textCtx = options.textCtx
-    this.fuel = 5000
+    this.fuel = options.fuel
 
     this.ctx.height = height
     this.ctx.width = width

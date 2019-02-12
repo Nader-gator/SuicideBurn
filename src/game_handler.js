@@ -87,7 +87,6 @@ export default class GameHandler{
           setTimeout(() => {
             this.ship.result('bad')
             // generateHighScoreForm(this.ship.fuel)
-            debugger
             document.body.onkeyup = function (e) {
               if (e.keyCode == 32) {
                 newGame(null, false)

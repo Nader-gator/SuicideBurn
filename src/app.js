@@ -48,7 +48,8 @@ export const newGame = (e,fresh = true)=>{
     ctx: shipCtx,
     gravity: surface.gravity,
     statsCtx,
-    textCtx
+    textCtx,
+    fuel: 5000,
       })
   const game = new Game(surface,ship)
 

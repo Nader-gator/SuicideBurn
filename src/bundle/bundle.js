@@ -10518,7 +10518,8 @@ var newGame = function newGame(e) {
     ctx: shipCtx,
     gravity: surface.gravity,
     statsCtx: statsCtx,
-    textCtx: textCtx
+    textCtx: textCtx,
+    fuel: 5000
   });
   var game = new _game_handler__WEBPACK_IMPORTED_MODULE_2__["default"](surface, ship);
 
@@ -10659,8 +10660,6 @@ function () {
             setTimeout(function () {
               _this.ship.result('bad'); // generateHighScoreForm(this.ship.fuel)
 
-
-              debugger;
 
               document.body.onkeyup = function (e) {
                 if (e.keyCode == 32) {
@@ -10897,19 +10896,48 @@ var predictPath = function predictPath(ship, surface) {
     vSpeed: vSpeed,
     ctx: ctx,
     coords: [x, y],
-    gravity: surface.gravity
+    gravity: surface.gravity,
+    fuel: 9001
   });
 
   while (!checkGameOver(surface, mockShip)) {
-    // debugger
     mockShip.gravityChange();
     mockShip.step();
+    var mockShip2 = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      hSpeed: mockShip.hSpeed,
+      vSpeed: mockShip.vSpeed,
+      ctx: mockShip.ctx,
+      coords: [mockShip.boardX, mockShip.boardY],
+      gravity: surface.gravity,
+      fuel: 9001
+    });
+
+    if (checkSafe(mockShip2, surface)) {
+      mockShip.history.push('MARK');
+    }
   }
 
   renderHistory(mockShip, ctx);
 };
+
+var checkSafe = function checkSafe(ship, surface) {
+  var outOfBounds = false;
+
+  while (!checkGameOver(surface, ship)) {
+    ship.gravityChange();
+    ship.fireEngine();
+    ship.step(); //  debugger
+
+    if (ship.boardX < 0 || ship.boardY < 0) {
+      outOfBounds = true;
+    }
+  }
+
+  return outOfBounds;
+};
+
 var checkGameOver = function checkGameOver(surface, ship) {
-  if (surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)) {
+  if (ship.boardX < 0 || ship.boardY < 0 || surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)) {
     return true;
   }
 
@@ -10922,21 +10950,55 @@ var renderHistory = function renderHistory(ship) {
   canvasEl.width = window.innerWidth;
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   ctx.strokeStyle = "white";
-  ctx.lineWidth = 0.5;
-  var initialX = ship.boardX;
-  var initialY = ship.boardY;
-  ctx.beginPath();
-  var x = ship.history[0][0] + 15;
-  var y = ship.history[0][1] + 15;
-  var xe = ship.history[ship.history.length - 1][0] + 15;
-  var ye = ship.history[ship.history.length - 1][1] + 15;
-  var xc = (x + xe) / 2;
-  var yc = (y + ye - 80) / 2;
-  ctx.moveTo(x, y);
-  ctx.quadraticCurveTo(xc, yc, xe, ye); // ctx.lineTo(x, y);
-  // ctx.lineTo(xe, ye);
+  ctx.lineWidth = 0.5; // let initialX = ship.boardX
+  // let initialY = ship.boardY
 
-  ctx.stroke();
+  ctx.beginPath();
+  var markIdx = ship.history.indexOf("MARK");
+
+  if (markIdx > 0) {
+    // debugger
+    var x = ship.history[0][0] + 15;
+    var y = ship.history[0][1] + 15;
+    var xe = ship.history[markIdx][0] + 15;
+    var ye = ship.history[markIdx][1] + 15;
+    var xc = (x + xe) / 2;
+    var yc = (y + ye - 80) / 2;
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(xc, yc, xe, ye);
+    ctx.strokeStyle = 'red';
+    ctx.stroke();
+    x = ship.history[markIdx][0] + 15;
+    y = ship.history[markIdx][1] + 15;
+    xe = ship.history[ship.history.length - 1][0] + 15;
+    ye = ship.history[ship.history.length - 1][1] + 15;
+    xc = (x + xe) / 2;
+    yc = (y + ye - 80) / 2;
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(xc, yc, xe, ye);
+    ctx.strokeStyle = 'white';
+    ctx.stroke();
+  } else {
+    var _x = ship.history[0][0] + 15;
+
+    var _y = ship.history[0][1] + 15;
+
+    var _xe = ship.history[ship.history.length - 1][0] + 15;
+
+    var _ye = ship.history[ship.history.length - 1][1] + 15;
+
+    var _xc = (_x + _xe) / 2;
+
+    var _yc = (_y + _ye - 80) / 2;
+
+    ctx.moveTo(_x, _y);
+    ctx.quadraticCurveTo(_xc, _yc, _xe, _ye);
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+  } // ctx.lineTo(x, y);
+  // ctx.lineTo(xe, ye);
+  // ctx.stroke();
+
 };
 
 /***/ }),
@@ -10976,7 +11038,7 @@ function () {
     this.gravity = options.gravity;
     this.statsCtx = options.statsCtx;
     this.textCtx = options.textCtx;
-    this.fuel = 5000;
+    this.fuel = options.fuel;
     this.ctx.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
     this.ctx.width = _app__WEBPACK_IMPORTED_MODULE_0__["width"];
     this.offset = 90;
