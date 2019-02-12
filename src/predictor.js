@@ -24,34 +24,10 @@ export const predictPath = (ship,surface) => {
   while (!checkGameOver(surface, mockShip)) {
     mockShip.gravityChange()
     mockShip.step()
-    const mockShip2 = new Ship({
-      hSpeed: mockShip.hSpeed,
-      vSpeed: mockShip.vSpeed,
-      ctx: mockShip.ctx,
-      coords: [mockShip.boardX, mockShip.boardY],
-      gravity: surface.gravity,
-      fuel: 9001
-    })
 
   }
-  renderHistory(mockShip, ctx)
+  renderHistory(mockShip,ship)
 }
-
-  const checkSafe = (ship,surface)=>{
-    let outOfBounds = false
-     while (!checkGameOver(surface,ship)) {
-       ship.gravityChange()
-       ship.fireEngine()
-       ship.step()
-      //  debugger
-       if (ship.boardX < 0 || ship.boardY < 0){
-         outOfBounds = true
-       }
-      }
-
-    return outOfBounds
-}
-
 
 
 export const checkGameOver=(surface,ship)=>{
@@ -63,7 +39,7 @@ export const checkGameOver=(surface,ship)=>{
   return false
 }
 
-export const renderHistory=(ship)=>{
+export const renderHistory=(ship,realShip)=>{
 
   const canvasEl = document.getElementById('layer6')
   const ctx = canvasEl.getContext("2d")
@@ -82,9 +58,40 @@ export const renderHistory=(ship)=>{
       var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
+      if (tooLate(realShip,ship.history.length - i)){
+        break
+      }
+      // ctx.moveTo(xc, yc)
     }
-    // curve through the last two ship.history
+    let color = tooLate(realShip, ship.history.length - i)
+    ctx.stroke();
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
-  
-  ctx.stroke();
+    ctx.beginPath();
+    for (i; i < ship.history.length - 2; i++) {
+      var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
+      var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
+      ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
+      // ctx.moveTo(xc, yc)
+    }
+    ctx.strokeStyle = 'red'
+    ctx.stroke();
+    ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
+    
+}
+
+const tooLate = (ship, stepsRemaining)=>{
+
+  const hChangePerSecondThrust = 0.009
+  const vChangePerSecondThrust = 0.009 + ship.gravity
+  const stepsForHStop = ship.hSpeed / hChangePerSecondThrust
+  const stepsforVstop = ship.vSpeed / vChangePerSecondThrust
+
+  if (stepsForHStop > stepsRemaining){
+    return 'red'
+  } else if (stepsforVstop > stepsRemaining){
+    return 'blue'
+  }else
+  {
+    return false
+  }
 }

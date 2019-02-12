@@ -10903,35 +10903,10 @@ var predictPath = function predictPath(ship, surface) {
   while (!checkGameOver(surface, mockShip)) {
     mockShip.gravityChange();
     mockShip.step();
-    var mockShip2 = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
-      hSpeed: mockShip.hSpeed,
-      vSpeed: mockShip.vSpeed,
-      ctx: mockShip.ctx,
-      coords: [mockShip.boardX, mockShip.boardY],
-      gravity: surface.gravity,
-      fuel: 9001
-    });
   }
 
-  renderHistory(mockShip, ctx);
+  renderHistory(mockShip, ship);
 };
-
-var checkSafe = function checkSafe(ship, surface) {
-  var outOfBounds = false;
-
-  while (!checkGameOver(surface, ship)) {
-    ship.gravityChange();
-    ship.fireEngine();
-    ship.step(); //  debugger
-
-    if (ship.boardX < 0 || ship.boardY < 0) {
-      outOfBounds = true;
-    }
-  }
-
-  return outOfBounds;
-};
-
 var checkGameOver = function checkGameOver(surface, ship) {
   if (ship.boardX < 0 || ship.boardY < 0 || surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)) {
     return true;
@@ -10939,7 +10914,7 @@ var checkGameOver = function checkGameOver(surface, ship) {
 
   return false;
 };
-var renderHistory = function renderHistory(ship) {
+var renderHistory = function renderHistory(ship, realShip) {
   var canvasEl = document.getElementById('layer6');
   var ctx = canvasEl.getContext("2d");
   canvasEl.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
@@ -10955,11 +10930,42 @@ var renderHistory = function renderHistory(ship) {
     var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
     var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-  } // curve through the last two ship.history
 
+    if (tooLate(realShip, ship.history.length - i)) {
+      break;
+    } // ctx.moveTo(xc, yc)
 
-  ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
+  }
+
+  var color = tooLate(realShip, ship.history.length - i);
   ctx.stroke();
+  ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
+  ctx.beginPath();
+
+  for (i; i < ship.history.length - 2; i++) {
+    var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
+    var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
+    ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc); // ctx.moveTo(xc, yc)
+  }
+
+  ctx.strokeStyle = 'red';
+  ctx.stroke();
+  ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
+};
+
+var tooLate = function tooLate(ship, stepsRemaining) {
+  var hChangePerSecondThrust = 0.009;
+  var vChangePerSecondThrust = 0.009 + ship.gravity;
+  var stepsForHStop = ship.hSpeed / hChangePerSecondThrust;
+  var stepsforVstop = ship.vSpeed / vChangePerSecondThrust;
+
+  if (stepsForHStop > stepsRemaining) {
+    return 'red';
+  } else if (stepsforVstop > stepsRemaining) {
+    return 'blue';
+  } else {
+    return false;
+  }
 };
 
 /***/ }),
@@ -11169,7 +11175,7 @@ function () {
       };
 
       if (this.vSpeed > 0.35) {
-        style.vSpeed = 'red';
+        style.vSpeed = 'blue';
       }
 
       if (Math.abs(this.hSpeed) > 0.2) {

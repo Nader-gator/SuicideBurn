@@ -165,7 +165,7 @@ export default class Ship {
   changeStyle(){
     let style = {hSpeed: 'grey',vSpeed: 'grey',fuel:'grey'}
     if (this.vSpeed > 0.35) {
-      style.vSpeed = 'red'
+      style.vSpeed = 'blue'
     }
     if (Math.abs(this.hSpeed) > 0.2){
       style.hSpeed = 'red'
