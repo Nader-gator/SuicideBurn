@@ -26,7 +26,7 @@ export const predictPath = (ship,surface) => {
     mockShip.step()
 
   }
-  renderHistory(mockShip,ship)
+  renderHistory(mockShip,ship,surface)
 }
 
 
@@ -39,7 +39,7 @@ export const checkGameOver=(surface,ship)=>{
   return false
 }
 
-export const renderHistory=(ship,realShip)=>{
+export const renderHistory=(ship,realShip,surface)=>{
 
   const canvasEl = document.getElementById('layer6')
   const ctx = canvasEl.getContext("2d")
@@ -55,15 +55,17 @@ export const renderHistory=(ship,realShip)=>{
 
   let i
     for (i = 1; i < ship.history.length - 2; i++) {
-      var xc = (ship.history[i][0] + ship.history[i + 1][0]) / 2;
-      var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
+      var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
+      var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-      if (tooLate(realShip,ship.history.length - i)){
-        break
+      if (i<ship.history.length - 6){
+        if (tooLateHere(ship.sHistory[i + 3],ship.history.length - i + 3,ship,surface,[ship.history[i + 3][0],ship.history[i + 3][1]],realShip.angle)){
+          break
+        }
       }
       // ctx.moveTo(xc, yc)
     }
-    let color = tooLate(realShip, ship.history.length - i)
+    // let color = tooLate(realShip, ship.history.length - i)
     ctx.stroke();
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
     ctx.beginPath();
@@ -79,19 +81,95 @@ export const renderHistory=(ship,realShip)=>{
     
 }
 
-const tooLate = (ship, stepsRemaining)=>{
+const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
 
-  const hChangePerSecondThrust = 0.009
-  const vChangePerSecondThrust = 0.009 + ship.gravity
-  const stepsForHStop = ship.hSpeed / hChangePerSecondThrust
-  const stepsforVstop = ship.vSpeed / vChangePerSecondThrust
+  // const hChangePerSecondThrust = 0.009
+  // const vChangePerSecondThrust = 0.009
 
-  if (stepsForHStop > stepsRemaining){
+  // const stepsForHStop = speed[0] / hChangePerSecondThrust
+  
+  // const stepsforVstop = speed[1] / vChangePerSecondThrust
+
+  const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
+  const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
+  // debugger
+  if (!verticlCollisionStopped){
     return 'red'
-  } else if (stepsforVstop > stepsRemaining){
-    return 'blue'
+  } else if (!horizontalCollisionStopped) {
+    return 'red'
   }else
   {
     return false
   }
+}
+
+const verticalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => {
+  const canvasEl = document.getElementById('layer5')
+  const ctx = canvasEl.getContext("2d")
+  canvasEl.height = height
+  canvasEl.width = window.innerWidth
+   const mockShip = new Ship({
+     hSpeed,
+     vSpeed,
+     ctx,
+     coords: [x, y],
+     gravity: surface.gravity,
+     fuel: 9001
+   },angle)
+
+   let inverted = false
+   while (!checkGameOver(surface, mockShip)) {
+     mockShip.step()
+     mockShip.gravityChange()
+     mockShip.fireEngine()
+    if (checkIfInvertedSpeed(vSpeed,mockShip.vSpeed)){
+      inverted = true
+      break
+    }
+   }
+   return inverted
+}
+const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => {
+  const canvasEl = document.getElementById('layer5')
+  const ctx = canvasEl.getContext("2d")
+  canvasEl.height = height
+  canvasEl.width = window.innerWidth
+   const mockShip = new Ship({
+     hSpeed,
+     vSpeed,
+     ctx,
+     coords: [x, y],
+     gravity: surface.gravity,
+     fuel: 9001
+   },angle)
+
+   let inverted = false
+   while (!checkGameOver(surface, mockShip)) {
+     mockShip.gravityChange()
+     mockShip.step()
+     mockShip.fireEngine()
+    if (checkIfInvertedSpeed(hSpeed,mockShip.hSpeed)){
+      inverted = true
+      break
+    }
+   }
+   return inverted
+}
+
+
+const checkIfInvertedSpeed = (initial,last)=>{
+  if (initial > 0){
+    if (last > 0){
+      return false
+    } else if(last <= 0) {
+      return true
+    }
+  } else if (initial < 0){
+    if (last > 0){
+      return true
+    } else if (last <= 0 ){
+      return false
+    }
+  }
+  return true
 }

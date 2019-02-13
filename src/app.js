@@ -42,7 +42,7 @@ export const newGame = (e,fresh = true)=>{
       )
 
   const ship = new Ship(
-    {hSpeed: 2,
+    {hSpeed: 1.6,
     vSpeed: 0.5,
     coords:[50,50],
     ctx: shipCtx,

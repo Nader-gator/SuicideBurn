@@ -10512,7 +10512,7 @@ var newGame = function newGame(e) {
     ctx: ctx
   });
   var ship = new _ship__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    hSpeed: 2,
+    hSpeed: 1.6,
     vSpeed: 0.5,
     coords: [50, 50],
     ctx: shipCtx,
@@ -10905,7 +10905,7 @@ var predictPath = function predictPath(ship, surface) {
     mockShip.step();
   }
 
-  renderHistory(mockShip, ship);
+  renderHistory(mockShip, ship, surface);
 };
 var checkGameOver = function checkGameOver(surface, ship) {
   if (ship.boardX < 0 || ship.boardY < 0 || surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)) {
@@ -10914,7 +10914,7 @@ var checkGameOver = function checkGameOver(surface, ship) {
 
   return false;
 };
-var renderHistory = function renderHistory(ship, realShip) {
+var renderHistory = function renderHistory(ship, realShip, surface) {
   var canvasEl = document.getElementById('layer6');
   var ctx = canvasEl.getContext("2d");
   canvasEl.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
@@ -10931,13 +10931,15 @@ var renderHistory = function renderHistory(ship, realShip) {
     var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
 
-    if (tooLate(realShip, ship.history.length - i)) {
-      break;
+    if (i < ship.history.length - 6) {
+      if (tooLateHere(ship.sHistory[i + 3], ship.history.length - i + 3, ship, surface, [ship.history[i + 3][0], ship.history[i + 3][1]], realShip.angle)) {
+        break;
+      }
     } // ctx.moveTo(xc, yc)
 
-  }
+  } // let color = tooLate(realShip, ship.history.length - i)
 
-  var color = tooLate(realShip, ship.history.length - i);
+
   ctx.stroke();
   ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
   ctx.beginPath();
@@ -10953,19 +10955,97 @@ var renderHistory = function renderHistory(ship, realShip) {
   ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], ship.history[i + 1][0], ship.history[i + 1][1]);
 };
 
-var tooLate = function tooLate(ship, stepsRemaining) {
-  var hChangePerSecondThrust = 0.009;
-  var vChangePerSecondThrust = 0.009 + ship.gravity;
-  var stepsForHStop = ship.hSpeed / hChangePerSecondThrust;
-  var stepsforVstop = ship.vSpeed / vChangePerSecondThrust;
+var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface, coords, angle) {
+  // const hChangePerSecondThrust = 0.009
+  // const vChangePerSecondThrust = 0.009
+  // const stepsForHStop = speed[0] / hChangePerSecondThrust
+  // const stepsforVstop = speed[1] / vChangePerSecondThrust
+  var verticlCollisionStopped = verticalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
+  var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface); // debugger
 
-  if (stepsForHStop > stepsRemaining) {
+  if (!verticlCollisionStopped) {
     return 'red';
-  } else if (stepsforVstop > stepsRemaining) {
-    return 'blue';
+  } else if (!horizontalCollisionStopped) {
+    return 'red';
   } else {
     return false;
   }
+};
+
+var verticalSecondarySimulation = function verticalSecondarySimulation(hSpeed, vSpeed, x, y, angle, surface) {
+  var canvasEl = document.getElementById('layer5');
+  var ctx = canvasEl.getContext("2d");
+  canvasEl.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
+  canvasEl.width = window.innerWidth;
+  var mockShip = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    hSpeed: hSpeed,
+    vSpeed: vSpeed,
+    ctx: ctx,
+    coords: [x, y],
+    gravity: surface.gravity,
+    fuel: 9001
+  }, angle);
+  var inverted = false;
+
+  while (!checkGameOver(surface, mockShip)) {
+    mockShip.step();
+    mockShip.gravityChange();
+    mockShip.fireEngine();
+
+    if (checkIfInvertedSpeed(vSpeed, mockShip.vSpeed)) {
+      inverted = true;
+      break;
+    }
+  }
+
+  return inverted;
+};
+
+var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpeed, vSpeed, x, y, angle, surface) {
+  var canvasEl = document.getElementById('layer5');
+  var ctx = canvasEl.getContext("2d");
+  canvasEl.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
+  canvasEl.width = window.innerWidth;
+  var mockShip = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    hSpeed: hSpeed,
+    vSpeed: vSpeed,
+    ctx: ctx,
+    coords: [x, y],
+    gravity: surface.gravity,
+    fuel: 9001
+  }, angle);
+  var inverted = false;
+
+  while (!checkGameOver(surface, mockShip)) {
+    mockShip.gravityChange();
+    mockShip.step();
+    mockShip.fireEngine();
+
+    if (checkIfInvertedSpeed(hSpeed, mockShip.hSpeed)) {
+      inverted = true;
+      break;
+    }
+  }
+
+  return inverted;
+};
+
+var checkIfInvertedSpeed = function checkIfInvertedSpeed(initial, last) {
+  if (initial > 0) {
+    if (last > 0) {
+      return false;
+    } else if (last <= 0) {
+      return true;
+    }
+  } else if (initial < 0) {
+    if (last > 0) {
+      return true;
+    } else if (last <= 0) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 /***/ }),
@@ -10993,6 +11073,8 @@ var Ship =
 /*#__PURE__*/
 function () {
   function Ship(options) {
+    var angle = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 60;
+
     _classCallCheck(this, Ship);
 
     this.hSpeed = options.hSpeed;
@@ -11008,14 +11090,15 @@ function () {
     this.fuel = options.fuel;
     this.ctx.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
     this.ctx.width = _app__WEBPACK_IMPORTED_MODULE_0__["width"];
-    this.offset = 90;
+    this.offset = angle;
     this.keyAction = this.keyAction.bind(this);
-    this.keyAction({}, 90);
-    this.angle = 90;
+    this.keyAction({}, angle);
+    this.angle = angle;
     this.fire = false;
     this.firing = false;
     this.step = this.step.bind(this);
     this.history = [];
+    this.sHistory = [];
     this.assist = true;
   }
 
@@ -11030,6 +11113,7 @@ function () {
       var x = this.calculateX();
       var y = this.calculateY();
       this.history.push([this.boardX + 15, this.boardY + 15]);
+      this.sHistory.push([this.hSpeed, this.vSpeed]);
       this.boardX = this.boardX + this.hSpeed;
       this.boardY = this.boardY + this.vSpeed;
       this.x = x;
@@ -11175,7 +11259,7 @@ function () {
       };
 
       if (this.vSpeed > 0.35) {
-        style.vSpeed = 'blue';
+        style.vSpeed = 'red';
       }
 
       if (Math.abs(this.hSpeed) > 0.2) {

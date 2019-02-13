@@ -3,7 +3,7 @@ import {width,height} from './app'
 
 
 export default class Ship {
-  constructor(options){
+  constructor(options,angle = 60){
     this.hSpeed = options.hSpeed
     this.vSpeed = options.vSpeed
     this.x = options.coords[0]
@@ -18,14 +18,15 @@ export default class Ship {
 
     this.ctx.height = height
     this.ctx.width = width
-    this.offset = 90
+    this.offset = angle
     this.keyAction=this.keyAction.bind(this)
-    this.keyAction({},90)
-    this.angle = 90
+    this.keyAction({},angle)
+    this.angle = angle
     this.fire = false
     this.firing = false
     this.step = this.step.bind(this)
     this.history = []
+    this.sHistory = []
     this.assist = true
   }
 
@@ -37,6 +38,7 @@ export default class Ship {
     const x = this.calculateX()
     const y = this.calculateY()
     this.history.push([this.boardX+15,this.boardY+15])
+    this.sHistory.push([this.hSpeed,this.vSpeed])
     this.boardX= this.boardX + this.hSpeed
     this.boardY= this.boardY + this.vSpeed
     this.x = x
@@ -165,7 +167,7 @@ export default class Ship {
   changeStyle(){
     let style = {hSpeed: 'grey',vSpeed: 'grey',fuel:'grey'}
     if (this.vSpeed > 0.35) {
-      style.vSpeed = 'blue'
+      style.vSpeed = 'red'
     }
     if (Math.abs(this.hSpeed) > 0.2){
       style.hSpeed = 'red'
