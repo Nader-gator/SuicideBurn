@@ -1,7 +1,7 @@
 import Ship from './ship'
 import Surface from './surface'
-import Game from './game_handler'
-import {generateHighScoreForm} from './high_scores_utl'
+import Game from './game'
+import DrawText from './draw_text';
 export const width = 3000
 export const height = window.innerHeight -75
 
@@ -47,11 +47,13 @@ export const newGame = (e,fresh = true)=>{
     coords:[50,50],
     ctx: shipCtx,
     gravity: surface.gravity,
-    statsCtx,
-    textCtx,
     fuel: 5000,
       })
-  const game = new Game(surface,ship)
+  const drawText = new DrawText
+  ({statsCtx,
+    textCtx},
+    ship )
+  const game = new Game(surface,ship,drawText)
 
     if (fresh === true) {
       game.preGame()

@@ -3,9 +3,10 @@ import {generateHighScoreForm,clearForm} from './high_scores_utl'
 import {predictPath} from './predictor'
 
 export default class GameHandler{
-  constructor(surface, ship){
+  constructor(surface, ship, drawText) {
     this.ship = ship
     this.surface = surface
+    this.drawText = drawText
   }
 
   isOver(){
@@ -46,55 +47,68 @@ export default class GameHandler{
   }
 
   preGame(){
-    this.ship.preGame()
+    this.drawText.preGame()
   }
   start(){
-    this.ship.clearCanvas()
+    this.drawText.clearCanvas()
     this.interval = setInterval(() => {
       this.ship.step()
       this.ship.render()
+      this.drawText.drawStats()
       if (this.ship.assist){
         this.predict()
       }
       if (this.isOver()){
         this.ship.fire = false
         this.ship.render()
-        clearInterval(this.interval)
-        if (this.checkLanding()){
-          this.ship.result('good')
-          let ranked
-          if (this.ship.assist){
-            ranked = generateHighScoreForm(0)
-          }else{
-            ranked = generateHighScoreForm(this.ship.fuel)
-          }
-
-          setTimeout(() => {
-            document.body.onkeyup = function (e) {
-              if ((ranked ? e.keyCode == 13 : e.keyCode == 32)) {
-                clearForm()
-                newGame(null, false)
-              }
-            }
-          }, 500);
-          
-        } else {
-          
-          setTimeout(() => {
-            this.ship.result('bad')
-            // generateHighScoreForm(this.ship.fuel)
-            document.body.onkeyup = function (e) {
-              if (e.keyCode == 32) {
-                newGame(null, false)
-              }
-            }
-          }, 500);
-        }
+        this.handleGameOver()
+        
       }
     }, 20);
   }
 
   predict(){
     predictPath(this.ship,this.surface)
+  }
+
+  handleGameOver(){
+    clearInterval(this.interval)
+    if (this.checkLanding()) {
+      this.drawText.result('good')
+      this.generateEndGameResult('good')
+    } else {
+      this.generateEndGameResult('bad')
+    }
+  }
+
+  generateEndGameResult(result){
+    if (result === 'good'){
+      let ranked
+      if (this.ship.assist) {
+        ranked = generateHighScoreForm(0)
+      } else {
+        ranked = generateHighScoreForm(this.ship.fuel)
+      }
+
+      setTimeout(() => {
+        document.body.onkeyup = function (e) {
+          if ((ranked ? e.keyCode == 13 : e.keyCode == 32)) {
+            clearForm()
+            newGame(null, false)
+          }
+        }
+      }, 500);
+
+    }else if (result === 'bad'){
+      setTimeout(() => {
+        this.drawText.result('bad')
+        // generateHighScoreForm(this.ship.fuel)
+        document.body.onkeyup = function (e) {
+          if (e.keyCode == 32) {
+            newGame(null, false)
+          }
+        }
+      }, 500);
+    }
   }
 }

@@ -131,7 +131,7 @@ export default class Surface {
       randAr.push(draws.mountain)
     })
     
-    randAr= randAr.concat(randAr)
+    // randAr= randAr.concat(randAr)
     
     randAr = this.shuffle(randAr)
     randAr.unshift(draws.hill)
@@ -270,9 +270,6 @@ export default class Surface {
     return num
   }
 
-  pointOn(x,y){
-    return this.grid[y][x]
-  }
 
   drawToCoords(from,to){
     const ctx = this.ctx

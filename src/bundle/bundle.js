@@ -10476,8 +10476,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGame", function() { return newGame; });
 /* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ship */ "./src/ship.js");
 /* harmony import */ var _surface__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./surface */ "./src/surface.js");
-/* harmony import */ var _game_handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game_handler */ "./src/game_handler.js");
-/* harmony import */ var _high_scores_utl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./high_scores_utl */ "./src/high_scores_utl.js");
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game */ "./src/game.js");
+/* harmony import */ var _draw_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./draw_text */ "./src/draw_text.js");
 
 
 
@@ -10517,11 +10517,13 @@ var newGame = function newGame(e) {
     coords: [50, 50],
     ctx: shipCtx,
     gravity: surface.gravity,
-    statsCtx: statsCtx,
-    textCtx: textCtx,
     fuel: 5000
   });
-  var game = new _game_handler__WEBPACK_IMPORTED_MODULE_2__["default"](surface, ship);
+  var drawText = new _draw_text__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    statsCtx: statsCtx,
+    textCtx: textCtx
+  }, ship);
+  var game = new _game__WEBPACK_IMPORTED_MODULE_2__["default"](surface, ship, drawText);
 
   if (fresh === true) {
     game.preGame();
@@ -10541,10 +10543,178 @@ document.addEventListener("DOMContentLoaded", newGame);
 
 /***/ }),
 
-/***/ "./src/game_handler.js":
-/*!*****************************!*\
-  !*** ./src/game_handler.js ***!
-  \*****************************/
+/***/ "./src/draw_text.js":
+/*!**************************!*\
+  !*** ./src/draw_text.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DrawText; });
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var DrawText =
+/*#__PURE__*/
+function () {
+  function DrawText(options, ship) {
+    _classCallCheck(this, DrawText);
+
+    this.statsCtx = options.statsCtx;
+    this.textCtx = options.textCtx;
+    this.ship = ship;
+  }
+
+  _createClass(DrawText, [{
+    key: "drawStats",
+    value: function drawStats() {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.beginPath();
+      ctx.lineWidth = "1";
+      ctx.fillStyle = "black";
+      ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
+      ctx.fill();
+      ctx.stroke();
+      ctx.strokeStyle = "white";
+      text.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      text.beginPath();
+      text.font = "normal 13px Arial ";
+      text.lineWidth = "1";
+      text.textAlign = "left";
+      var style = this.changeStyle();
+      text.fillStyle = style.hSpeed;
+      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.ship.hSpeed * 100)), window.innerWidth * 0.872, 60);
+      text.fillStyle = style.vSpeed;
+      text.fillText("Vertical Speed: ".concat(Math.ceil(this.ship.vSpeed * 100)), window.innerWidth * 0.872, 80);
+      text.fillStyle = style.fuel;
+      text.fillText("Fuel: ".concat(Math.ceil(this.ship.fuel)), window.innerWidth * 0.872, 100);
+    }
+  }, {
+    key: "changeStyle",
+    value: function changeStyle() {
+      var style = {
+        hSpeed: 'grey',
+        vSpeed: 'grey',
+        fuel: 'grey'
+      };
+
+      if (this.ship.vSpeed > 0.35) {
+        style.vSpeed = 'red';
+      }
+
+      if (Math.abs(this.ship.hSpeed) > 0.2) {
+        style.hSpeed = 'red';
+      }
+
+      if (this.ship.fuel < 500) {
+        style.fuel = 'red';
+      }
+
+      return style;
+    }
+  }, {
+    key: "preGame",
+    value: function preGame() {
+      var _this = this;
+
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      text.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.beginPath();
+      ctx.lineWidth = "1";
+      ctx.strokeStyle = "white";
+      ctx.fillStyle = "#252626";
+      ctx.rect(window.innerWidth * 0.15, window.innerHeight / 5, window.innerWidth * 0.7, window.innerHeight / 2.2);
+      ctx.fill();
+      ctx.stroke();
+      text.beginPath();
+      text.font = "normal 18px Arial ";
+      text.fillStyle = "white";
+      text.lineWidth = "1";
+      text.textAlign = "center";
+      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship on a flat surface preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
+      text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
+      text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
+
+      if (this.ship.assist) {
+        text.fillStyle = "#e85e5e";
+        text.fillText("press A to disable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
+      } else {
+        text.fillStyle = "#e85e5e";
+        text.fillText("press A to enable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
+      }
+
+      text.fillStyle = "#5f93e8";
+      text.fillText("About The Landing Assistance: the line drawn shows your predicted trajectory.", window.innerWidth * 0.5, window.innerHeight / 1.8);
+      text.fillText("the line color changes to red at the 'suicide burn' point,the last possible point to fire your engines", window.innerWidth * 0.5, window.innerHeight / 1.7);
+      text.fillText(" and still kill your horizonal/vertical velocity before crashing.The game uses your current ship angle to calculate this point", window.innerWidth * 0.5, window.innerHeight / 1.6);
+
+      window.onkeyup = function (e) {
+        if (e.keyCode === 65) {
+          _this.ship.assist = !_this.ship.assist;
+
+          _this.preGame();
+        }
+      };
+    }
+  }, {
+    key: "clearCanvas",
+    value: function clearCanvas() {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
+      text.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
+    }
+  }, {
+    key: "result",
+    value: function result(status) {
+      var ctx = this.statsCtx;
+      var text = this.textCtx;
+      ctx.beginPath();
+      ctx.lineWidth = "1";
+      ctx.strokeStyle = "white";
+      ctx.fillStyle = "#252626";
+      text.beginPath();
+      text.font = "normal 25px Arial ";
+      text.fillStyle = "white";
+      text.lineWidth = "1";
+      text.textAlign = "center";
+
+      if (status === 'good') {
+        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 6, window.innerWidth * 0.4, window.innerHeight / 2);
+        text.fillText("The Eagle Has Landed!", window.innerWidth * 0.5, window.innerHeight / 4);
+      } else if (status === 'bad') {
+        ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 4.5);
+        text.fillText("You left a 2 mile crater on the Moon!", window.innerWidth * 0.5, window.innerHeight / 4);
+        text.fillText("Press space to start a new game", window.innerWidth * 0.5, window.innerHeight / 3);
+      }
+
+      ctx.fill();
+      ctx.stroke();
+    }
+  }]);
+
+  return DrawText;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/game.js":
+/*!*********************!*\
+  !*** ./src/game.js ***!
+  \*********************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -10567,11 +10737,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var GameHandler =
 /*#__PURE__*/
 function () {
-  function GameHandler(surface, ship) {
+  function GameHandler(surface, ship, drawText) {
     _classCallCheck(this, GameHandler);
 
     this.ship = ship;
     this.surface = surface;
+    this.drawText = drawText;
   }
 
   _createClass(GameHandler, [{
@@ -10610,18 +10781,20 @@ function () {
   }, {
     key: "preGame",
     value: function preGame() {
-      this.ship.preGame();
+      this.drawText.preGame();
     }
   }, {
     key: "start",
     value: function start() {
       var _this = this;
 
-      this.ship.clearCanvas();
+      this.drawText.clearCanvas();
       this.interval = setInterval(function () {
         _this.ship.step();
 
         _this.ship.render();
+
+        _this.drawText.drawStats();
 
         if (_this.ship.assist) {
           _this.predict();
@@ -10632,39 +10805,7 @@ function () {
 
           _this.ship.render();
 
-          clearInterval(_this.interval);
-
-          if (_this.checkLanding()) {
-            _this.ship.result('good');
-
-            var ranked;
-
-            if (_this.ship.assist) {
-              ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(0);
-            } else {
-              ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(_this.ship.fuel);
-            }
-
-            setTimeout(function () {
-              document.body.onkeyup = function (e) {
-                if (ranked ? e.keyCode == 13 : e.keyCode == 32) {
-                  Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["clearForm"])();
-                  Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
-                }
-              };
-            }, 500);
-          } else {
-            setTimeout(function () {
-              _this.ship.result('bad'); // generateHighScoreForm(this.ship.fuel)
-
-
-              document.body.onkeyup = function (e) {
-                if (e.keyCode == 32) {
-                  Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
-                }
-              };
-            }, 500);
-          }
+          _this.handleGameOver();
         }
       }, 20);
     }
@@ -10672,6 +10813,53 @@ function () {
     key: "predict",
     value: function predict() {
       Object(_predictor__WEBPACK_IMPORTED_MODULE_2__["predictPath"])(this.ship, this.surface);
+    }
+  }, {
+    key: "handleGameOver",
+    value: function handleGameOver() {
+      clearInterval(this.interval);
+
+      if (this.checkLanding()) {
+        this.drawText.result('good');
+        this.generateEndGameResult('good');
+      } else {
+        this.generateEndGameResult('bad');
+      }
+    }
+  }, {
+    key: "generateEndGameResult",
+    value: function generateEndGameResult(result) {
+      var _this2 = this;
+
+      if (result === 'good') {
+        var ranked;
+
+        if (this.ship.assist) {
+          ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(0);
+        } else {
+          ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(this.ship.fuel);
+        }
+
+        setTimeout(function () {
+          document.body.onkeyup = function (e) {
+            if (ranked ? e.keyCode == 13 : e.keyCode == 32) {
+              Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["clearForm"])();
+              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+            }
+          };
+        }, 500);
+      } else if (result === 'bad') {
+        setTimeout(function () {
+          _this2.drawText.result('bad'); // generateHighScoreForm(this.ship.fuel)
+
+
+          document.body.onkeyup = function (e) {
+            if (e.keyCode == 32) {
+              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+            }
+          };
+        }, 500);
+      }
     }
   }]);
 
@@ -10778,6 +10966,7 @@ var produceUl = function produceUl(scoresArray, rank, score) {
   });
 };
 var generateHighScoreForm = function generateHighScoreForm(score) {
+  debugger;
   fetchCodes().then(function (scores) {
     var rank = checkIfScoreIsgood(score, scores);
     var arr = Object.values(scores);
@@ -10867,14 +11056,12 @@ var Point = function Point(coords) {
 /*!**************************!*\
   !*** ./src/predictor.js ***!
   \**************************/
-/*! exports provided: predictPath, checkGameOver, renderHistory */
+/*! exports provided: predictPath */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "predictPath", function() { return predictPath; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkGameOver", function() { return checkGameOver; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderHistory", function() { return renderHistory; });
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.js");
 /* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ship */ "./src/ship.js");
 
@@ -10904,6 +11091,7 @@ var predictPath = function predictPath(ship, surface) {
 
   renderHistory(mockShip, ship, surface);
 };
+
 var checkGameOver = function checkGameOver(surface, ship) {
   if (ship.boardX < 0 || ship.boardY < 0 || surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)) {
     return true;
@@ -10911,6 +11099,7 @@ var checkGameOver = function checkGameOver(surface, ship) {
 
   return false;
 };
+
 var renderHistory = function renderHistory(ship, realShip, surface) {
   var canvasEl = document.getElementById('layer6');
   var ctx = canvasEl.getContext("2d");
@@ -10928,8 +11117,10 @@ var renderHistory = function renderHistory(ship, realShip, surface) {
     var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
 
-    if (tooLateHere(ship.sHistory[i + 14], ship.history.length - i + 14, ship, surface, [ship.history[i + 14][0], ship.history[i + 14][1]], realShip.angle)) {
-      break;
+    if (i < ship.history.length - 30) {
+      if (tooLateHere(ship.sHistory[i + 30], ship.history.length - i + 30, ship, surface, [ship.history[i + 30][0], ship.history[i + 30][1]], realShip.angle)) {
+        break;
+      }
     } // ctx.moveTo(xc, yc)
 
   } // let color = tooLate(realShip, ship.history.length - i)
@@ -10961,8 +11152,10 @@ var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface,
     var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface); // debugger
 
     if (!verticlCollisionStopped) {
+      console.log('vertical');
       return 'red';
     } else if (!horizontalCollisionStopped) {
+      console.log('horizontal');
       return 'red';
     } else {
       return false;
@@ -10988,14 +11181,14 @@ var verticalSecondarySimulation = function verticalSecondarySimulation(hSpeed, v
   var inverted = false;
 
   while (!checkGameOver(surface, mockShip)) {
-    mockShip.step();
-    mockShip.gravityChange();
-    mockShip.fireEngine();
-
     if (checkIfInvertedSpeed(vSpeed, mockShip.vSpeed)) {
       inverted = true;
       break;
     }
+
+    mockShip.step();
+    mockShip.gravityChange();
+    mockShip.fireEngine();
   }
 
   return inverted;
@@ -11017,14 +11210,14 @@ var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpee
   var inverted = false;
 
   while (!checkGameOver(surface, mockShip)) {
-    mockShip.gravityChange();
-    mockShip.step();
-    mockShip.fireEngine();
-
     if (checkIfInvertedSpeed(hSpeed, mockShip.hSpeed)) {
       inverted = true;
       break;
     }
+
+    mockShip.gravityChange();
+    mockShip.step();
+    mockShip.fireEngine();
   }
 
   return inverted;
@@ -11085,21 +11278,17 @@ function () {
     this.boardY = options.coords[1];
     this.ctx = options.ctx;
     this.gravity = options.gravity;
-    this.statsCtx = options.statsCtx;
-    this.textCtx = options.textCtx;
     this.fuel = options.fuel;
-    this.ctx.height = _app__WEBPACK_IMPORTED_MODULE_0__["height"];
-    this.ctx.width = _app__WEBPACK_IMPORTED_MODULE_0__["width"];
     this.offset = angle;
-    this.keyAction = this.keyAction.bind(this);
-    this.keyAction({}, angle);
     this.angle = angle;
     this.fire = false;
     this.firing = false;
-    this.step = this.step.bind(this);
     this.history = [];
     this.sHistory = [];
     this.assist = true;
+    this.keyAction({}, angle);
+    this.step = this.step.bind(this);
+    this.keyAction = this.keyAction.bind(this);
   }
 
   _createClass(Ship, [{
@@ -11204,7 +11393,6 @@ function () {
 
       this.gravityChange();
       this.ctx.clearRect(this.x - 10, this.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
-      this.drawStats();
 
       if (this.fuel < 8) {
         this.firing = false;
@@ -11223,135 +11411,6 @@ function () {
 
       var ship = document.getElementById("ship");
       this.ctx.drawImage(ship, this.x, this.y, 30, 30);
-    }
-  }, {
-    key: "drawStats",
-    value: function drawStats() {
-      var ctx = this.statsCtx;
-      var text = this.textCtx;
-      ctx.beginPath();
-      ctx.lineWidth = "1";
-      ctx.fillStyle = "black";
-      ctx.rect(window.innerWidth * 0.865, 30, 160, 90);
-      ctx.fill();
-      ctx.stroke();
-      ctx.strokeStyle = "white";
-      text.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      text.beginPath();
-      text.font = "normal 13px Arial ";
-      text.lineWidth = "1";
-      text.textAlign = "left";
-      var style = this.changeStyle();
-      text.fillStyle = style.hSpeed;
-      text.fillText("Horizontal Speed: ".concat(Math.ceil(this.hSpeed * 100)), window.innerWidth * 0.872, 60);
-      text.fillStyle = style.vSpeed;
-      text.fillText("Vertical Speed: ".concat(Math.ceil(this.vSpeed * 100)), window.innerWidth * 0.872, 80);
-      text.fillStyle = style.fuel;
-      text.fillText("Fuel: ".concat(Math.ceil(this.fuel)), window.innerWidth * 0.872, 100);
-    }
-  }, {
-    key: "changeStyle",
-    value: function changeStyle() {
-      var style = {
-        hSpeed: 'grey',
-        vSpeed: 'grey',
-        fuel: 'grey'
-      };
-
-      if (this.vSpeed > 0.35) {
-        style.vSpeed = 'red';
-      }
-
-      if (Math.abs(this.hSpeed) > 0.2) {
-        style.hSpeed = 'red';
-      }
-
-      if (this.fuel < 500) {
-        style.fuel = 'red';
-      }
-
-      return style;
-    }
-  }, {
-    key: "preGame",
-    value: function preGame() {
-      var _this2 = this;
-
-      var ctx = this.statsCtx;
-      var text = this.textCtx;
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      text.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      ctx.beginPath();
-      ctx.lineWidth = "1";
-      ctx.strokeStyle = "white";
-      ctx.fillStyle = "#252626";
-      ctx.rect(window.innerWidth * 0.15, window.innerHeight / 5, window.innerWidth * 0.7, window.innerHeight / 2.2);
-      ctx.fill();
-      ctx.stroke();
-      text.beginPath();
-      text.font = "normal 18px Arial ";
-      text.fillStyle = "white";
-      text.lineWidth = "1";
-      text.textAlign = "center";
-      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship on a flat surface preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
-      text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
-      text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
-
-      if (this.assist) {
-        text.fillStyle = "#e85e5e";
-        text.fillText("press A to disable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
-      } else {
-        text.fillStyle = "#e85e5e";
-        text.fillText("press A to enable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
-      }
-
-      text.fillStyle = "#5f93e8";
-      text.fillText("About The Landing Assistance: the line drawn shows your predicted trajectory.", window.innerWidth * 0.5, window.innerHeight / 1.8);
-      text.fillText("the line color changes to red at the 'suicide burn' point,the last possible point to fire your engines", window.innerWidth * 0.5, window.innerHeight / 1.7);
-      text.fillText(" and still kill your horizonal/vertical velocity before crashing.The game uses your current ship angle to calculate this point", window.innerWidth * 0.5, window.innerHeight / 1.6);
-
-      window.onkeyup = function (e) {
-        if (e.keyCode === 65) {
-          _this2.assist = !_this2.assist;
-
-          _this2.preGame();
-        }
-      };
-    }
-  }, {
-    key: "clearCanvas",
-    value: function clearCanvas() {
-      var ctx = this.statsCtx;
-      var text = this.textCtx;
-      ctx.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
-      text.clearRect(0, 0, _app__WEBPACK_IMPORTED_MODULE_0__["width"], _app__WEBPACK_IMPORTED_MODULE_0__["height"]);
-    }
-  }, {
-    key: "result",
-    value: function result(status) {
-      var ctx = this.statsCtx;
-      var text = this.textCtx;
-      ctx.beginPath();
-      ctx.lineWidth = "1";
-      ctx.strokeStyle = "white";
-      ctx.fillStyle = "#252626";
-      text.beginPath();
-      text.font = "normal 25px Arial ";
-      text.fillStyle = "white";
-      text.lineWidth = "1";
-      text.textAlign = "center";
-
-      if (status === 'good') {
-        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 6, window.innerWidth * 0.4, window.innerHeight / 2);
-        text.fillText("The Eagle Has Landed!", window.innerWidth * 0.5, window.innerHeight / 4);
-      } else if (status === 'bad') {
-        ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 4.5);
-        text.fillText("You left a 2 mile crater on the Moon!", window.innerWidth * 0.5, window.innerHeight / 4);
-        text.fillText("Press space to start a new game", window.innerWidth * 0.5, window.innerHeight / 3);
-      }
-
-      ctx.fill();
-      ctx.stroke();
     }
   }]);
 
@@ -11535,8 +11594,8 @@ function () {
       });
       [1, 2, 3].forEach(function (i) {
         randAr.push(draws.mountain);
-      });
-      randAr = randAr.concat(randAr);
+      }); // randAr= randAr.concat(randAr)
+
       randAr = this.shuffle(randAr);
       randAr.unshift(draws.hill);
       randAr = randAr.flat();
@@ -11721,11 +11780,6 @@ function () {
       }
 
       return num;
-    }
-  }, {
-    key: "pointOn",
-    value: function pointOn(x, y) {
-      return this.grid[y][x];
     }
   }, {
     key: "drawToCoords",

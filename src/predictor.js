@@ -30,7 +30,7 @@ export const predictPath = (ship,surface) => {
 }
 
 
-export const checkGameOver=(surface,ship)=>{
+const checkGameOver=(surface,ship)=>{
   if (
      ship.boardX < 0 || ship.boardY < 0 || surface.collisionHappened(ship.boardX + 15, ship.boardY + 15)
   ) {
@@ -39,7 +39,7 @@ export const checkGameOver=(surface,ship)=>{
   return false
 }
 
-export const renderHistory=(ship,realShip,surface)=>{
+const renderHistory=(ship,realShip,surface)=>{
 
   const canvasEl = document.getElementById('layer6')
   const ctx = canvasEl.getContext("2d")
@@ -58,9 +58,13 @@ export const renderHistory=(ship,realShip,surface)=>{
       var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-        if (tooLateHere(ship.sHistory[i+14],ship.history.length - i+14,ship,surface,[ship.history[i+14][0],ship.history[i+14][1]],realShip.angle)){
+      if (i < ship.history.length - 30) {
+
+        if (tooLateHere(ship.sHistory[i+30],ship.history.length - i+30,ship,surface,[ship.history[i+30][0],ship.history[i+30][1]],realShip.angle)){
           break
         }
+
+      }
       // ctx.moveTo(xc, yc)
     }
     // let color = tooLate(realShip, ship.history.length - i)
@@ -94,8 +98,10 @@ const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
     const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
     // debugger
     if (!verticlCollisionStopped){
+      console.log('vertical')
       return 'red'
     } else if (!horizontalCollisionStopped) {
+      console.log('horizontal')
       return 'red'
     }else
     {
@@ -122,13 +128,14 @@ const verticalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => {
 
    let inverted = false
    while (!checkGameOver(surface, mockShip)) {
-     mockShip.step()
-     mockShip.gravityChange()
-     mockShip.fireEngine()
-    if (checkIfInvertedSpeed(vSpeed,mockShip.vSpeed)){
+    if (checkIfInvertedSpeed(vSpeed, mockShip.vSpeed)) {
       inverted = true
       break
     }
+    mockShip.step()
+     mockShip.gravityChange()
+     mockShip.fireEngine()
+    
    }
    return inverted
 }
@@ -148,13 +155,14 @@ const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => 
 
    let inverted = false
    while (!checkGameOver(surface, mockShip)) {
-     mockShip.gravityChange()
-     mockShip.step()
-     mockShip.fireEngine()
-    if (checkIfInvertedSpeed(hSpeed,mockShip.hSpeed)){
+    if (checkIfInvertedSpeed(hSpeed, mockShip.hSpeed)) {
       inverted = true
       break
     }
+    mockShip.gravityChange()
+     mockShip.step()
+     mockShip.fireEngine()
+    
    }
    return inverted
 }

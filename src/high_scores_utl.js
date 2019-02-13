@@ -72,6 +72,7 @@ export const produceUl=(scoresArray,rank,score)=>{
 }
 
 export const generateHighScoreForm = (score)=>{
+  debugger
   fetchCodes().then(scores=>{
     let rank = checkIfScoreIsgood(score, scores)
     let arr = Object.values(scores)
