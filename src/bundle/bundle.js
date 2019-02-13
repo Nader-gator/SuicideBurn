@@ -11542,13 +11542,18 @@ function () {
       return true;
     }
   }, {
+    key: "generateRandomNumUpTo",
+    value: function generateRandomNumUpTo(num) {
+      return Math.floor(Math.random() * num);
+    }
+  }, {
     key: "insertStars",
     value: function insertStars() {
       var _this = this;
 
       this.grid.forEach(function (row) {
         row.forEach(function (point) {
-          if (Math.floor(Math.random() * 7000) === 1) {
+          if (_this.generateRandomNumUpTo(7000) === 1) {
             if (!_this.collisionHappened(point.x, point.y)) {
               point.star = true;
             }
@@ -11594,10 +11599,16 @@ function () {
       });
       [1, 2, 3].forEach(function (i) {
         randAr.push(draws.mountain);
-      }); // randAr= randAr.concat(randAr)
-
+      });
       randAr = this.shuffle(randAr);
-      randAr.unshift(draws.hill);
+      var randNum = this.generateRandomNumUpTo(10);
+
+      if (randNum % 2 === 0) {
+        randAr.unshift(draws.hill);
+      } else {
+        randAr.unshift(draws.flat);
+      }
+
       randAr = randAr.flat();
       this.ctx.beginPath();
       this.ctx.strokeStyle = "white";
@@ -11711,7 +11722,7 @@ function () {
 
         case 'mountain':
           yRand = {
-            max: 150,
+            max: this.generateRandomNumUpTo(150),
             type: -1
           };
           yPeak = {
@@ -11729,7 +11740,7 @@ function () {
 
         case 'fall':
           yRand = {
-            max: 150,
+            max: this.generateRandomNumUpTo(150),
             type: 1
           };
           yPeak = {

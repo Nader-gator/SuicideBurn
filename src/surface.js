@@ -80,12 +80,14 @@ export default class Surface {
     return true
   }
 
-
+  generateRandomNumUpTo(num){
+    return Math.floor(Math.random() * num)
+  }
 
   insertStars(){
     this.grid.forEach(row => {
       row.forEach(point => {
-        if (Math.floor(Math.random() * 7000) === 1){
+        if ((this.generateRandomNumUpTo(7000)) === 1) {
           if (!this.collisionHappened(point.x,point.y)){
             point.star = true
           }
@@ -130,11 +132,14 @@ export default class Surface {
     [1,2,3].forEach(i=>{
       randAr.push(draws.mountain)
     })
-    
-    // randAr= randAr.concat(randAr)
-    
+
     randAr = this.shuffle(randAr)
-    randAr.unshift(draws.hill)
+    let randNum =this.generateRandomNumUpTo(10)
+    if (randNum % 2 === 0){
+      randAr.unshift(draws.hill)
+    } else {
+      randAr.unshift(draws.flat)
+    }
     randAr = randAr.flat()
 
     this.ctx.beginPath();
@@ -214,7 +219,7 @@ export default class Surface {
         break
 
       case 'mountain':
-        yRand = {max: 150, type: -1}
+        yRand = {max: this.generateRandomNumUpTo(150), type: -1}
         yPeak = {max: 20,type:1}
         yFloor = {max: 20,type: -1}
         length = Math.round(0.08 * this.width)
@@ -222,7 +227,7 @@ export default class Surface {
         xTravel = Math.round(length * 0.15)
         break
       case 'fall':
-        yRand = {max: 150, type: 1}
+        yRand = {max: this.generateRandomNumUpTo(150), type: 1}
         yPeak = {max: 20,type:1}
         yFloor = {max: 20,type: -1}
         length = Math.round(0.04 * this.width)
