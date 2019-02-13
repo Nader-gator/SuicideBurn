@@ -58,7 +58,7 @@ export const renderHistory=(ship,realShip,surface)=>{
       var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-        if (tooLateHere(ship.sHistory[i+1],ship.history.length - i+1,ship,surface,[ship.history[i+1][0],ship.history[i+1][1]],realShip.angle)){
+        if (tooLateHere(ship.sHistory[i+14],ship.history.length - i+14,ship,surface,[ship.history[i+14][0],ship.history[i+14][1]],realShip.angle)){
           break
         }
       // ctx.moveTo(xc, yc)
@@ -112,7 +112,7 @@ const verticalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => {
   canvasEl.height = height
   canvasEl.width = window.innerWidth
    const mockShip = new Ship({
-     hSpeed,
+     hSpeed: 0,
      vSpeed,
      ctx,
      coords: [x, y],
@@ -139,10 +139,10 @@ const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => 
   canvasEl.width = window.innerWidth
    const mockShip = new Ship({
      hSpeed,
-     vSpeed,
+     vSpeed: 0,
      ctx,
      coords: [x, y],
-     gravity: surface.gravity,
+     gravity: 0,
      fuel: 9001
    },angle)
 
