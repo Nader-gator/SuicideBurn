@@ -96,7 +96,6 @@ const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
 
     const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
     const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
-    // debugger
     if (!verticlCollisionStopped){
       console.log('vertical')
       return 'red'

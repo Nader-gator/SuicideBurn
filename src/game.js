@@ -59,10 +59,13 @@ export default class GameHandler{
         this.predict()
       }
       if (this.isOver()){
-        this.ship.fire = false
+
+        this.ship.firing = false
         this.ship.render()
         this.handleGameOver()
-        
+        const canvasEl = document.getElementById('layer6')
+        const ctx = canvasEl.getContext("2d")
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
       }
     }, 20);
   }
@@ -77,6 +80,7 @@ export default class GameHandler{
       this.drawText.result('good')
       this.generateEndGameResult('good')
     } else {
+      this.ship.animateExplosion()
       this.generateEndGameResult('bad')
     }
   }

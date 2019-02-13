@@ -15,7 +15,6 @@ export default class Ship {
     this.fuel = options.fuel
     this.offset = angle
     this.angle = angle
-    this.fire = false
     this.firing = false
     this.history = []
     this.sHistory = []
@@ -94,7 +93,6 @@ export default class Ship {
     }
     if (e.code === "Space") {
       this.firing=true
-      this.fire = true
     }
     this.ctx.translate(-1*(offsetX), -1*(offsetY))
   }
@@ -102,25 +100,41 @@ export default class Ship {
   render(){
     window.onkeydown = this.keyAction
     window.onkeyup = (e)=> {if(e.code==="Space"){
-      this.fire=false;this.firing=false}}
+      this.firing=false}}
     this.gravityChange()
     this.ctx.clearRect(this.x-10, this.y-10, height, width)
 
     if (this.fuel < 8) {
       this.firing = false
-      this.fire = false
     }
-    if(this.fire){
+    if(this.firing){
       const shipFiring = document.getElementById("ship-firing")
       this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-      this.fuel -= 8
-    }
-    if (this.firing){
       this.fireEngine()
+      this.fuel -= 8
     }
     const ship = document.getElementById("ship")
     
     this.ctx.drawImage(ship,this.x,this.y,30,30)
   }
 
+  animateExplosion(){
+    const explodeFrameOne = document.getElementById('explosion1')
+    const explodeFrameTwo = document.getElementById('explosion2')
+    const explodeFrameThree = document.getElementById('explosion3')
+
+    this.ctx.clearRect(this.x - 10, this.y - 10, height, width)
+    this.ctx.drawImage(explodeFrameOne, this.x, this.y, 50, 50)
+    setTimeout(() => {
+      this.ctx.clearRect(this.x - 10, this.y - 10, height, width)
+      this.ctx.drawImage(explodeFrameTwo, this.x, this.y, 50, 50)
+    }, 100);
+    setTimeout(() => {
+      this.ctx.clearRect(this.x - 10, this.y - 10, height, width)
+      this.ctx.drawImage(explodeFrameThree, this.x, this.y, 50, 50)
+      setTimeout(() => {
+        this.ctx.clearRect(this.x - 10, this.y - 10, height, width)
+      }, 50);
+    }, 100);
+  }
 }

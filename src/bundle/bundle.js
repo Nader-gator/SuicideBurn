@@ -10801,11 +10801,15 @@ function () {
         }
 
         if (_this.isOver()) {
-          _this.ship.fire = false;
+          _this.ship.firing = false;
 
           _this.ship.render();
 
           _this.handleGameOver();
+
+          var canvasEl = document.getElementById('layer6');
+          var ctx = canvasEl.getContext("2d");
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         }
       }, 20);
     }
@@ -10823,6 +10827,7 @@ function () {
         this.drawText.result('good');
         this.generateEndGameResult('good');
       } else {
+        this.ship.animateExplosion();
         this.generateEndGameResult('bad');
       }
     }
@@ -10966,7 +10971,6 @@ var produceUl = function produceUl(scoresArray, rank, score) {
   });
 };
 var generateHighScoreForm = function generateHighScoreForm(score) {
-  debugger;
   fetchCodes().then(function (scores) {
     var rank = checkIfScoreIsgood(score, scores);
     var arr = Object.values(scores);
@@ -11149,7 +11153,7 @@ var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface,
 
   if (stepsForHStop > stepsRemaining || stepsforVstop > stepsRemaining) {
     var verticlCollisionStopped = verticalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
-    var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface); // debugger
+    var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
 
     if (!verticlCollisionStopped) {
       console.log('vertical');
@@ -11281,7 +11285,6 @@ function () {
     this.fuel = options.fuel;
     this.offset = angle;
     this.angle = angle;
-    this.fire = false;
     this.firing = false;
     this.history = [];
     this.sHistory = [];
@@ -11372,7 +11375,6 @@ function () {
 
       if (e.code === "Space") {
         this.firing = true;
-        this.fire = true;
       }
 
       this.ctx.translate(-1 * offsetX, -1 * offsetY);
@@ -11386,7 +11388,6 @@ function () {
 
       window.onkeyup = function (e) {
         if (e.code === "Space") {
-          _this.fire = false;
           _this.firing = false;
         }
       };
@@ -11396,21 +11397,42 @@ function () {
 
       if (this.fuel < 8) {
         this.firing = false;
-        this.fire = false;
-      }
-
-      if (this.fire) {
-        var shipFiring = document.getElementById("ship-firing");
-        this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
-        this.fuel -= 8;
       }
 
       if (this.firing) {
+        var shipFiring = document.getElementById("ship-firing");
+        this.ctx.drawImage(shipFiring, this.x + 10, this.y + 25, 10, 10);
         this.fireEngine();
+        this.fuel -= 8;
       }
 
       var ship = document.getElementById("ship");
       this.ctx.drawImage(ship, this.x, this.y, 30, 30);
+    }
+  }, {
+    key: "animateExplosion",
+    value: function animateExplosion() {
+      var _this2 = this;
+
+      var explodeFrameOne = document.getElementById('explosion1');
+      var explodeFrameTwo = document.getElementById('explosion2');
+      var explodeFrameThree = document.getElementById('explosion3');
+      this.ctx.clearRect(this.x - 10, this.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
+      this.ctx.drawImage(explodeFrameOne, this.x, this.y, 50, 50);
+      setTimeout(function () {
+        _this2.ctx.clearRect(_this2.x - 10, _this2.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
+
+        _this2.ctx.drawImage(explodeFrameTwo, _this2.x, _this2.y, 50, 50);
+      }, 100);
+      setTimeout(function () {
+        _this2.ctx.clearRect(_this2.x - 10, _this2.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
+
+        _this2.ctx.drawImage(explodeFrameThree, _this2.x, _this2.y, 50, 50);
+
+        setTimeout(function () {
+          _this2.ctx.clearRect(_this2.x - 10, _this2.y - 10, _app__WEBPACK_IMPORTED_MODULE_0__["height"], _app__WEBPACK_IMPORTED_MODULE_0__["width"]);
+        }, 50);
+      }, 100);
     }
   }]);
 
