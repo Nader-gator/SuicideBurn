@@ -190,10 +190,10 @@ export default class Ship {
     ctx.strokeStyle = "white";
     ctx.fillStyle = "#252626"
     ctx.rect(
-      window.innerWidth * 0.175,
+      window.innerWidth * 0.15,
       window.innerHeight / 5,
-      window.innerWidth*0.65,
-      window.innerHeight /3.2);
+      window.innerWidth*0.7,
+      window.innerHeight /2.2);
     ctx.fill()
     ctx.stroke();
 
@@ -202,17 +202,21 @@ export default class Ship {
     text.fillStyle = "white";
     text.lineWidth = "1"
     text.textAlign = "center";
-    text.fillText(`Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.`, window.innerWidth * 0.5 , window.innerHeight / 3.9)
+    text.fillText(`Welcome to SuicideBurn, the Objective of the game is to land the ship on a flat surface preserving as much fuel as possible.`, window.innerWidth * 0.5 , window.innerHeight / 3.9)
     
     text.fillText(`fire your engine by pressing space, and rotate the ship by left and right arrow keys`, window.innerWidth * 0.5, window.innerHeight / 3.2)
     text.fillText(`press SPACE to START`, window.innerWidth * 0.5, window.innerHeight / 2.5)
     if (this.assist){
-      text.fillStyle = "red";
+      text.fillStyle = "#e85e5e";
       text.fillText(`press A to disable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
     }else {
-      text.fillStyle = "red";
+      text.fillStyle = "#e85e5e";
       text.fillText(`press A to enable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
     }
+    text.fillStyle = "#5f93e8";
+    text.fillText(`About The Landing Assistance: the line drawn shows your predicted trajectory.`, window.innerWidth * 0.5, window.innerHeight / 1.8)
+    text.fillText(`the line color changes to red at the 'suicide burn' point,the last possible point to fire your engines`, window.innerWidth * 0.5, window.innerHeight / 1.7)
+    text.fillText(` and still kill your horizonal/vertical velocity before crashing.The game uses your current ship angle to calculate this point`, window.innerWidth * 0.5, window.innerHeight / 1.6)
       window.onkeyup = (e) => {
         if (e.keyCode === 65) {
           this.assist = !this.assist

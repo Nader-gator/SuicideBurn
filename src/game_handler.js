@@ -33,8 +33,8 @@ export default class GameHandler{
       }
     }
     
-    if (Math.abs(fY - lY) <= 5 
-    && Math.abs(fX -lX) > 20
+    if (Math.abs(fY - lY) <= 10
+    && Math.abs(fX -lX) > 15
     && (this.ship.vSpeed < 0.35)
     && (Math.abs(this.ship.hSpeed) < 0.2)
     && (this.ship.angle === 0 || this.ship.angle === -10 || this.ship.angle === 10)
@@ -42,10 +42,6 @@ export default class GameHandler{
       return true
     }else{
       return false
-      // console.log(Math.abs(fY - lY))
-      // console.log(Math.abs(fX - lX))
-      // console.log((this.ship.vSpeed))
-      // console.log(Math.abs(this.ship.hSpeed))
     }
   }
 

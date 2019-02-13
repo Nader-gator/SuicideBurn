@@ -10601,13 +10601,10 @@ function () {
         }
       }
 
-      if (Math.abs(fY - lY) <= 5 && Math.abs(fX - lX) > 20 && this.ship.vSpeed < 0.35 && Math.abs(this.ship.hSpeed) < 0.2 && (this.ship.angle === 0 || this.ship.angle === -10 || this.ship.angle === 10)) {
+      if (Math.abs(fY - lY) <= 10 && Math.abs(fX - lX) > 15 && this.ship.vSpeed < 0.35 && Math.abs(this.ship.hSpeed) < 0.2 && (this.ship.angle === 0 || this.ship.angle === -10 || this.ship.angle === 10)) {
         return true;
       } else {
-        return false; // console.log(Math.abs(fY - lY))
-        // console.log(Math.abs(fX - lX))
-        // console.log((this.ship.vSpeed))
-        // console.log(Math.abs(this.ship.hSpeed))
+        return false;
       }
     }
   }, {
@@ -10931,10 +10928,8 @@ var renderHistory = function renderHistory(ship, realShip, surface) {
     var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
 
-    if (i < ship.history.length - 6) {
-      if (tooLateHere(ship.sHistory[i + 3], ship.history.length - i + 3, ship, surface, [ship.history[i + 3][0], ship.history[i + 3][1]], realShip.angle)) {
-        break;
-      }
+    if (tooLateHere(ship.sHistory[i + 1], ship.history.length - i + 1, ship, surface, [ship.history[i + 1][0], ship.history[i + 1][1]], realShip.angle)) {
+      break;
     } // ctx.moveTo(xc, yc)
 
   } // let color = tooLate(realShip, ship.history.length - i)
@@ -10956,17 +10951,22 @@ var renderHistory = function renderHistory(ship, realShip, surface) {
 };
 
 var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface, coords, angle) {
-  // const hChangePerSecondThrust = 0.009
-  // const vChangePerSecondThrust = 0.009
-  // const stepsForHStop = speed[0] / hChangePerSecondThrust
-  // const stepsforVstop = speed[1] / vChangePerSecondThrust
-  var verticlCollisionStopped = verticalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
-  var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface); // debugger
+  var hChangePerSecondThrust = 0.009;
+  var vChangePerSecondThrust = 0.009;
+  var stepsForHStop = speed[0] / hChangePerSecondThrust;
+  var stepsforVstop = speed[1] / vChangePerSecondThrust;
 
-  if (!verticlCollisionStopped) {
-    return 'red';
-  } else if (!horizontalCollisionStopped) {
-    return 'red';
+  if (stepsForHStop > stepsRemaining || stepsforVstop > stepsRemaining) {
+    var verticlCollisionStopped = verticalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
+    var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface); // debugger
+
+    if (!verticlCollisionStopped) {
+      return 'red';
+    } else if (!horizontalCollisionStopped) {
+      return 'red';
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
@@ -11285,7 +11285,7 @@ function () {
       ctx.lineWidth = "1";
       ctx.strokeStyle = "white";
       ctx.fillStyle = "#252626";
-      ctx.rect(window.innerWidth * 0.175, window.innerHeight / 5, window.innerWidth * 0.65, window.innerHeight / 3.2);
+      ctx.rect(window.innerWidth * 0.15, window.innerHeight / 5, window.innerWidth * 0.7, window.innerHeight / 2.2);
       ctx.fill();
       ctx.stroke();
       text.beginPath();
@@ -11293,17 +11293,22 @@ function () {
       text.fillStyle = "white";
       text.lineWidth = "1";
       text.textAlign = "center";
-      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
+      text.fillText("Welcome to SuicideBurn, the Objective of the game is to land the ship on a flat surface preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
       text.fillText("fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
       text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
 
       if (this.assist) {
-        text.fillStyle = "red";
+        text.fillStyle = "#e85e5e";
         text.fillText("press A to disable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
       } else {
-        text.fillStyle = "red";
+        text.fillStyle = "#e85e5e";
         text.fillText("press A to enable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
       }
+
+      text.fillStyle = "#5f93e8";
+      text.fillText("About The Landing Assistance: the line drawn shows your predicted trajectory.", window.innerWidth * 0.5, window.innerHeight / 1.8);
+      text.fillText("the line color changes to red at the 'suicide burn' point,the last possible point to fire your engines", window.innerWidth * 0.5, window.innerHeight / 1.7);
+      text.fillText(" and still kill your horizonal/vertical velocity before crashing.The game uses your current ship angle to calculate this point", window.innerWidth * 0.5, window.innerHeight / 1.6);
 
       window.onkeyup = function (e) {
         if (e.keyCode === 65) {

@@ -58,11 +58,9 @@ export const renderHistory=(ship,realShip,surface)=>{
       var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-      if (i<ship.history.length - 6){
-        if (tooLateHere(ship.sHistory[i + 3],ship.history.length - i + 3,ship,surface,[ship.history[i + 3][0],ship.history[i + 3][1]],realShip.angle)){
+        if (tooLateHere(ship.sHistory[i+1],ship.history.length - i+1,ship,surface,[ship.history[i+1][0],ship.history[i+1][1]],realShip.angle)){
           break
         }
-      }
       // ctx.moveTo(xc, yc)
     }
     // let color = tooLate(realShip, ship.history.length - i)
@@ -83,22 +81,27 @@ export const renderHistory=(ship,realShip,surface)=>{
 
 const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
 
-  // const hChangePerSecondThrust = 0.009
-  // const vChangePerSecondThrust = 0.009
+  const hChangePerSecondThrust = 0.009
+  const vChangePerSecondThrust = 0.009
 
-  // const stepsForHStop = speed[0] / hChangePerSecondThrust
+  const stepsForHStop = speed[0] / hChangePerSecondThrust
   
-  // const stepsforVstop = speed[1] / vChangePerSecondThrust
+  const stepsforVstop = speed[1] / vChangePerSecondThrust
 
-  const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
-  const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
-  // debugger
-  if (!verticlCollisionStopped){
-    return 'red'
-  } else if (!horizontalCollisionStopped) {
-    return 'red'
-  }else
-  {
+  if (stepsForHStop > stepsRemaining || stepsforVstop > stepsRemaining){
+
+    const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
+    const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
+    // debugger
+    if (!verticlCollisionStopped){
+      return 'red'
+    } else if (!horizontalCollisionStopped) {
+      return 'red'
+    }else
+    {
+      return false
+    }
+  } else {
     return false
   }
 }
