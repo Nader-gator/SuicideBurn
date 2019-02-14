@@ -149,7 +149,7 @@ this way, the secondary set of simulations are only run when the point of simula
 
 Another challenging aspect of this project was hit detection. The main challenge in hit detection was the fact that the surface is drawn using randomly generated points, and the surface line is drawn between those two points. Essentially, the game knows where each point is located, but does not know about the line drawn between those two points. to solve this, basic trigonometry was used.
 
-![triangle](https://github.com/Nader-gator/SuicideBurn/blob/master/assets/tiangle.png)
+![triangle](https://github.com/Nader-gator/SuicideBurn/blob/master/assets/triangle.png)
 
 in the image above, `AB/AC == AD/AE`. To create an accurate hit detection system, the two surface points are set as the B and C point on this triangle, and ships coordinates, are D and E. therefore, the game will know if a collision has happened if `AD/AE < AB/AC`
 
