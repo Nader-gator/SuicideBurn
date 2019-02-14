@@ -88,7 +88,7 @@ export const generateHighScoreForm = (score)=>{
 
 export const createForm = (ul,score)=>{
   let my_form = document.createElement('FORM');
-  my_form.name = 'myForm';
+  my_form.name = 'highscoreForm';
   my_form.method = 'POST';
   my_form.onsubmit = (e)=>{
     e.preventDefault()

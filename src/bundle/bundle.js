@@ -10483,8 +10483,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var width = 3000;
-var height = window.innerHeight - 75; // generateHighScoreForm(850)
-
+var height = window.innerHeight - 75;
 var newGame = function newGame(e) {
   var fresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var canvasEl = document.getElementById('layer1');
@@ -10991,7 +10990,7 @@ var generateHighScoreForm = function generateHighScoreForm(score) {
 };
 var createForm = function createForm(ul, score) {
   var my_form = document.createElement('FORM');
-  my_form.name = 'myForm';
+  my_form.name = 'highscoreForm';
   my_form.method = 'POST';
 
   my_form.onsubmit = function (e) {
@@ -11070,6 +11069,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ship */ "./src/ship.js");
 
 
+
 var predictPath = function predictPath(ship, surface) {
   var canvasEl = document.getElementById('layer5');
   var ctx = canvasEl.getContext("2d");
@@ -11146,20 +11146,18 @@ var renderHistory = function renderHistory(ship, realShip, surface) {
 };
 
 var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface, coords, angle) {
-  var hChangePerSecondThrust = 0.009;
-  var vChangePerSecondThrust = 0.009;
-  var stepsForHStop = speed[0] / hChangePerSecondThrust;
-  var stepsforVstop = speed[1] / vChangePerSecondThrust;
+  var hChangePerSecondfromThrust = _ship__WEBPACK_IMPORTED_MODULE_1__["ENGINE_THRUST"];
+  var vChangePerSecondfromThrust = _ship__WEBPACK_IMPORTED_MODULE_1__["ENGINE_THRUST"];
+  var stepsForHStop = speed[0] / hChangePerSecondfromThrust;
+  var stepsforVstop = speed[1] / vChangePerSecondfromThrust;
 
   if (stepsForHStop > stepsRemaining || stepsforVstop > stepsRemaining) {
     var verticlCollisionStopped = verticalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
     var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
 
     if (!verticlCollisionStopped) {
-      console.log('vertical');
       return 'red';
     } else if (!horizontalCollisionStopped) {
-      console.log('horizontal');
       return 'red';
     } else {
       return false;
@@ -11251,11 +11249,12 @@ var checkIfInvertedSpeed = function checkIfInvertedSpeed(initial, last) {
 /*!*********************!*\
   !*** ./src/ship.js ***!
   \*********************/
-/*! exports provided: default */
+/*! exports provided: ENGINE_THRUST, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ENGINE_THRUST", function() { return ENGINE_THRUST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Ship; });
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11265,6 +11264,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
+var ENGINE_THRUST = 0.009;
 
 var Ship =
 /*#__PURE__*/
@@ -11314,8 +11314,8 @@ function () {
   }, {
     key: "fireEngine",
     value: function fireEngine() {
-      this.updateVSpeed(0.009);
-      this.updateHSpeed(0.009);
+      this.updateVSpeed(ENGINE_THRUST);
+      this.updateHSpeed(ENGINE_THRUST);
     }
   }, {
     key: "updateVSpeed",

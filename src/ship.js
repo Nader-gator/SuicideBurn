@@ -1,5 +1,5 @@
 import {width,height} from './app'
-
+export const ENGINE_THRUST = 0.009
 
 
 export default class Ship {
@@ -39,8 +39,8 @@ export default class Ship {
   }
 
   fireEngine(){
-    this.updateVSpeed(0.009)
-    this.updateHSpeed(0.009)
+    this.updateVSpeed(ENGINE_THRUST)
+    this.updateHSpeed(ENGINE_THRUST)
   }
 
   updateVSpeed(force){

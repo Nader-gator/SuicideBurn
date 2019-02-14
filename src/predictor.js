@@ -1,5 +1,6 @@
 import {height} from './app'
 import Ship from './ship'
+import {ENGINE_THRUST} from './ship'
 export const predictPath = (ship,surface) => {
  
   const canvasEl = document.getElementById('layer5')
@@ -85,22 +86,20 @@ const renderHistory=(ship,realShip,surface)=>{
 
 const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
 
-  const hChangePerSecondThrust = 0.009
-  const vChangePerSecondThrust = 0.009
+  const hChangePerSecondfromThrust = ENGINE_THRUST
+  const vChangePerSecondfromThrust = ENGINE_THRUST
 
-  const stepsForHStop = speed[0] / hChangePerSecondThrust
+  const stepsForHStop = speed[0] / hChangePerSecondfromThrust
   
-  const stepsforVstop = speed[1] / vChangePerSecondThrust
+  const stepsforVstop = speed[1] / vChangePerSecondfromThrust
 
   if (stepsForHStop > stepsRemaining || stepsforVstop > stepsRemaining){
 
     const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
     const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
     if (!verticlCollisionStopped){
-      console.log('vertical')
       return 'red'
     } else if (!horizontalCollisionStopped) {
-      console.log('horizontal')
       return 'red'
     }else
     {

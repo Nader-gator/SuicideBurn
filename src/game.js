@@ -33,7 +33,7 @@ export default class GameHandler{
         break
       }
     }
-    
+
     if (Math.abs(fY - lY) <= 10
     && Math.abs(fX -lX) > 15
     && (this.ship.vSpeed < 0.35)

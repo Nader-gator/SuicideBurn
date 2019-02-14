@@ -5,7 +5,6 @@ import DrawText from './draw_text';
 export const width = 3000
 export const height = window.innerHeight -75
 
-// generateHighScoreForm(850)
 export const newGame = (e,fresh = true)=>{
 
   const canvasEl = document.getElementById('layer1')
