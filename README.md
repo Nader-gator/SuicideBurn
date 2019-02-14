@@ -145,7 +145,7 @@ this way, the secondary set of simulations are only run when the point of simula
 
 
 
-###Collision Detection
+### Collision Detection
 
 Another challenging aspect of this project was hit detection. The main challenge in hit detection was the fact that the surface is drawn using randomly generated points, and the surface line is drawn between those two points. Essentially, the game knows where each point is located, but does not know about the line drawn between those two points. to solve this, basic trigonometry was used.
 
