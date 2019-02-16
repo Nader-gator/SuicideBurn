@@ -11121,8 +11121,8 @@ var renderHistory = function renderHistory(ship, realShip, surface) {
     var yc = (ship.history[i][1] + ship.history[i + 1][1]) / 2;
     ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
 
-    if (i < ship.history.length - 30) {
-      if (tooLateHere(ship.sHistory[i + 30], ship.history.length - i + 30, ship, surface, [ship.history[i + 30][0], ship.history[i + 30][1]], realShip.angle)) {
+    if (i < ship.history.length - 5) {
+      if (tooLateHere(ship.sHistory[i + 5], ship.history.length - i + 5, ship, surface, [ship.history[i + 5][0], ship.history[i + 5][1]], realShip.angle)) {
         break;
       }
     } // ctx.moveTo(xc, yc)
@@ -11156,9 +11156,9 @@ var tooLateHere = function tooLateHere(speed, stepsRemaining, mockShip, surface,
     var horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface);
 
     if (!verticlCollisionStopped) {
-      return 'red';
+      return true;
     } else if (!horizontalCollisionStopped) {
-      return 'red';
+      return true;
     } else {
       return false;
     }
@@ -11203,7 +11203,7 @@ var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpee
   canvasEl.width = window.innerWidth;
   var mockShip = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
     hSpeed: hSpeed,
-    vSpeed: 0,
+    vSpeed: vSpeed,
     ctx: ctx,
     coords: [x, y],
     gravity: 0,
@@ -11220,6 +11220,9 @@ var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpee
     mockShip.gravityChange();
     mockShip.step();
     mockShip.fireEngine();
+    mockShip.angle = 90;
+    mockShip.fireEngine();
+    mockShip.angle = angle;
   }
 
   return inverted;

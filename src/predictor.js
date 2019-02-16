@@ -59,9 +59,9 @@ const renderHistory=(ship,realShip,surface)=>{
       var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-      if (i < ship.history.length - 30) {
+      if (i < ship.history.length - 5) {
 
-        if (tooLateHere(ship.sHistory[i+30],ship.history.length - i+30,ship,surface,[ship.history[i+30][0],ship.history[i+30][1]],realShip.angle)){
+        if (tooLateHere(ship.sHistory[i+5],ship.history.length - i+5,ship,surface,[ship.history[i+5][0],ship.history[i+5][1]],realShip.angle)){
           break
         }
 
@@ -98,9 +98,9 @@ const tooLateHere = (speed, stepsRemaining,mockShip,surface,coords,angle)=>{
     const verticlCollisionStopped = verticalSecondarySimulation(speed[0],speed[1],coords[0],coords[1], angle, surface)
     const horizontalCollisionStopped = horizontalSecondarySimulation(speed[0], speed[1], coords[0], coords[1], angle, surface)
     if (!verticlCollisionStopped){
-      return 'red'
+      return true
     } else if (!horizontalCollisionStopped) {
-      return 'red'
+      return true
     }else
     {
       return false
@@ -130,7 +130,7 @@ const verticalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => {
       inverted = true
       break
     }
-    mockShip.step()
+     mockShip.step()
      mockShip.gravityChange()
      mockShip.fireEngine()
     
@@ -144,7 +144,7 @@ const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => 
   canvasEl.width = window.innerWidth
    const mockShip = new Ship({
      hSpeed,
-     vSpeed: 0,
+     vSpeed,
      ctx,
      coords: [x, y],
      gravity: 0,
@@ -157,10 +157,12 @@ const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => 
       inverted = true
       break
     }
-    mockShip.gravityChange()
+     mockShip.gravityChange()
      mockShip.step()
      mockShip.fireEngine()
-    
+     mockShip.angle = 90
+     mockShip.fireEngine()
+     mockShip.angle = angle
    }
    return inverted
 }

@@ -49,9 +49,9 @@ ctx.strokeStyle = "white"
       var xc = (ship.history[i][0] + ship.history[i+1][0]) / 2;
       var yc = (ship.history[i][1] + ship.history[i+1][1]) / 2;
       ctx.quadraticCurveTo(ship.history[i][0], ship.history[i][1], xc, yc);
-      if (i < ship.history.length - 30) {
+      if (i < ship.history.length - 5) {
 
-        if (tooLateHere(ship.sHistory[i+30],ship.history.length - i+30,ship,surface,[ship.history[i+30][0],ship.history[i+30][1]],realShip.angle)){
+        if (tooLateHere(ship.sHistory[i+5],ship.history.length - i+5,ship,surface,[ship.history[i+5][0],ship.history[i+5][1]],realShip.angle)){
           break
         }
 
@@ -147,7 +147,7 @@ this way, the secondary set of simulations are only run when the point of simula
 
 ### Collision Detection
 
-Another challenging aspect of this project was hit detection. The main challenge in hit detection was the fact that the surface is drawn using randomly generated points, and the surface line is drawn between those two points. Essentially, the game knows where each point is located, but does not know about the line drawn between those two points. to solve this, basic trigonometry was used.
+Another challenging aspect of this project was hit detection. The main challenge in hit detection was the fact that the surface is drawn using randomly generated points, and the surface line is drawn between those two points. Essentially, the game knows where each point is located, but does not know about the line drawn between those two points. to solve this, I went back to high school trigonometry.
 
 ![triangle](https://github.com/Nader-gator/SuicideBurn/blob/master/assets/triangle.png)
 
