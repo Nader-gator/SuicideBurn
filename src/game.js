@@ -86,6 +86,7 @@ export default class GameHandler{
   }
 
   generateEndGameResult(result){
+    const oldship = this.ship
     if (result === 'good'){
       let ranked
       if (this.ship.assist) {
@@ -93,26 +94,26 @@ export default class GameHandler{
       } else {
         ranked = generateHighScoreForm(this.ship.fuel)
       }
-
+      this.drawText.drawLastCommand(ranked)
       setTimeout(() => {
         document.body.onkeyup = function (e) {
           if ((ranked ? e.keyCode == 13 : e.keyCode == 32)) {
             clearForm()
-            newGame(null, false)
+            newGame(null, false, oldship)
           }
         }
-      }, 500);
+      }, 600);
 
     }else if (result === 'bad'){
       setTimeout(() => {
         this.drawText.result('bad')
         // generateHighScoreForm(this.ship.fuel)
-        document.body.onkeyup = function (e) {
+        document.body.onkeyup = (e) => {
           if (e.keyCode == 32) {
-            newGame(null, false)
+            newGame(null, false, oldship)
           }
         }
-      }, 500);
+      }, 600);
     }
   }
 }

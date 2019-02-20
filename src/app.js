@@ -5,7 +5,7 @@ import DrawText from './draw_text';
 export const width = 3000
 export const height = window.innerHeight -75
 
-export const newGame = (e,fresh = true)=>{
+export const newGame = (e,fresh = true, oldShip)=>{
 
   const canvasEl = document.getElementById('layer1')
   const ctx = canvasEl.getContext("2d")
@@ -48,6 +48,9 @@ export const newGame = (e,fresh = true)=>{
     gravity: surface.gravity,
     fuel: 5000,
       })
+      if (oldShip){
+        ship.assist = oldShip.assist
+      }
   const drawText = new DrawText
   ({statsCtx,
     textCtx},

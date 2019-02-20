@@ -82,13 +82,7 @@ preGame() {
 
   text.fillText(`Fire your engine by pressing space, and rotate the ship by left and right arrow keys`, window.innerWidth * 0.5, window.innerHeight / 3.2)
   text.fillText(`press SPACE to START`, window.innerWidth * 0.5, window.innerHeight / 2.5)
-  if (this.ship.assist) {
-    text.fillStyle = "#e85e5e";
-    text.fillText(`Press A to disable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
-  } else {
-    text.fillStyle = "#e85e5e";
-    text.fillText(`Press A to enable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
-  }
+  this.drawAssistText()
   text.fillStyle = "#5f93e8";
   text.fillText(`About The Landing Assistance: the line drawn shows your predicted trajectory.`, window.innerWidth * 0.5, window.innerHeight / 1.8)
   text.fillText(`The line color changes to red at the 'suicide burn' point,the last possible point to fire your engines`, window.innerWidth * 0.5, window.innerHeight / 1.7)
@@ -100,6 +94,17 @@ preGame() {
     }
   }
 
+}
+drawAssistText(){
+    const text = this.textCtx
+
+  if (this.ship.assist) {
+    text.fillStyle = "#e85e5e";
+    text.fillText(`Press A to disable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
+  } else {
+    text.fillStyle = "#e85e5e";
+    text.fillText(`Press A to enable landing assistance (your highscore will not be recorded with assistance ON)`, window.innerWidth * 0.5, window.innerHeight / 2.1)
+  }
 }
 
 clearCanvas() {
@@ -130,21 +135,67 @@ result(status) {
       window.innerWidth * 0.3,
       window.innerHeight / 6,
       window.innerWidth * 0.4,
-      window.innerHeight / 2);
+      window.innerHeight / 1.5);
     text.fillText(`The Eagle Has Landed!`, window.innerWidth * 0.5, window.innerHeight / 4)
+    if (this.ship.assist) {
+      text.fillStyle = "#e85e5e";
+      text.fillText(`Press A to disable landing assistance`, window.innerWidth * 0.5, window.innerHeight / 1.4)
+    } else {
+      text.fillStyle = "#e85e5e";
+      text.fillText(`Press A to enable landing assistance`, window.innerWidth * 0.5, window.innerHeight / 1.4)
+    }
+    window.onkeyup = (e) => {
+      if (e.keyCode === 65) {
+        this.ship.assist = !this.ship.assist
+        text.clearRect(
+          window.innerWidth * 0.325,
+          window.innerHeight / 6,
+          window.innerWidth * 0.35,
+          window.innerHeight / 3.5
+        );
+        this.result("good")
+      }
+    }
+    // this.drawAssistText()
+
   } else if (status === 'bad') {
     ctx.rect(
       window.innerWidth * 0.325,
       window.innerHeight / 6,
 
       window.innerWidth * 0.35,
-      window.innerHeight / 4.5);
+      window.innerHeight / 3.5);
     text.fillText(`You left a 2 mile crater on the Moon!`, window.innerWidth * 0.5, window.innerHeight / 4)
     text.fillText(`Press space to start a new game`, window.innerWidth * 0.5, window.innerHeight / 3)
-
+  if (this.ship.assist) {
+    text.fillStyle = "#e85e5e";
+    text.fillText(`Press A to disable landing assistance`, window.innerWidth * 0.5, window.innerHeight / 2.4)
+  } else {
+    text.fillStyle = "#e85e5e";
+    text.fillText(`Press A to enable landing assistance`, window.innerWidth * 0.5, window.innerHeight / 2.4)
+  }
+    window.onkeyup = (e) => {
+      if (e.keyCode === 65) {
+        this.ship.assist = !this.ship.assist
+        text.clearRect(
+          window.innerWidth * 0.325,
+          window.innerHeight / 6,
+          window.innerWidth * 0.35,
+          window.innerHeight / 3.5
+          );
+        this.result("bad")
+      }
+    }
   }
 
   ctx.fill()
   ctx.stroke();
+}
+
+drawLastCommand(ranked) {
+    const text = this.textCtx
+    text.fillStyle = "white";
+    text.fillText(`Press ${ranked ? "ENTER" : "SPACE"} to start a new game`, window.innerWidth * 0.5, window.innerHeight / 1.28)
+    text.stroke()
 }
 }

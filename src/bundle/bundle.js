@@ -10486,6 +10486,7 @@ var width = 3000;
 var height = window.innerHeight - 75;
 var newGame = function newGame(e) {
   var fresh = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var oldShip = arguments.length > 2 ? arguments[2] : undefined;
   var canvasEl = document.getElementById('layer1');
   var ctx = canvasEl.getContext("2d");
   var shipcanvasEl = document.getElementById('layer2');
@@ -10518,6 +10519,11 @@ var newGame = function newGame(e) {
     gravity: surface.gravity,
     fuel: 5000
   });
+
+  if (oldShip) {
+    ship.assist = oldShip.assist;
+  }
+
   var drawText = new _draw_text__WEBPACK_IMPORTED_MODULE_3__["default"]({
     statsCtx: statsCtx,
     textCtx: textCtx
@@ -10646,15 +10652,7 @@ function () {
       text.fillText("Welcome to SuicideBurn, the objective of the game is to land the ship on a flat surface preserving as much fuel as possible.", window.innerWidth * 0.5, window.innerHeight / 3.9);
       text.fillText("Fire your engine by pressing space, and rotate the ship by left and right arrow keys", window.innerWidth * 0.5, window.innerHeight / 3.2);
       text.fillText("press SPACE to START", window.innerWidth * 0.5, window.innerHeight / 2.5);
-
-      if (this.ship.assist) {
-        text.fillStyle = "#e85e5e";
-        text.fillText("Press A to disable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
-      } else {
-        text.fillStyle = "#e85e5e";
-        text.fillText("Press A to enable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
-      }
-
+      this.drawAssistText();
       text.fillStyle = "#5f93e8";
       text.fillText("About The Landing Assistance: the line drawn shows your predicted trajectory.", window.innerWidth * 0.5, window.innerHeight / 1.8);
       text.fillText("The line color changes to red at the 'suicide burn' point,the last possible point to fire your engines", window.innerWidth * 0.5, window.innerHeight / 1.7);
@@ -10669,6 +10667,19 @@ function () {
       };
     }
   }, {
+    key: "drawAssistText",
+    value: function drawAssistText() {
+      var text = this.textCtx;
+
+      if (this.ship.assist) {
+        text.fillStyle = "#e85e5e";
+        text.fillText("Press A to disable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
+      } else {
+        text.fillStyle = "#e85e5e";
+        text.fillText("Press A to enable landing assistance (your highscore will not be recorded with assistance ON)", window.innerWidth * 0.5, window.innerHeight / 2.1);
+      }
+    }
+  }, {
     key: "clearCanvas",
     value: function clearCanvas() {
       var ctx = this.statsCtx;
@@ -10679,6 +10690,8 @@ function () {
   }, {
     key: "result",
     value: function result(status) {
+      var _this2 = this;
+
       var ctx = this.statsCtx;
       var text = this.textCtx;
       ctx.beginPath();
@@ -10692,16 +10705,59 @@ function () {
       text.textAlign = "center";
 
       if (status === 'good') {
-        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 6, window.innerWidth * 0.4, window.innerHeight / 2);
+        ctx.rect(window.innerWidth * 0.3, window.innerHeight / 6, window.innerWidth * 0.4, window.innerHeight / 1.5);
         text.fillText("The Eagle Has Landed!", window.innerWidth * 0.5, window.innerHeight / 4);
+
+        if (this.ship.assist) {
+          text.fillStyle = "#e85e5e";
+          text.fillText("Press A to disable landing assistance", window.innerWidth * 0.5, window.innerHeight / 1.4);
+        } else {
+          text.fillStyle = "#e85e5e";
+          text.fillText("Press A to enable landing assistance", window.innerWidth * 0.5, window.innerHeight / 1.4);
+        }
+
+        window.onkeyup = function (e) {
+          if (e.keyCode === 65) {
+            _this2.ship.assist = !_this2.ship.assist;
+            text.clearRect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 3.5);
+
+            _this2.result("good");
+          }
+        }; // this.drawAssistText()
+
       } else if (status === 'bad') {
-        ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 4.5);
+        ctx.rect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 3.5);
         text.fillText("You left a 2 mile crater on the Moon!", window.innerWidth * 0.5, window.innerHeight / 4);
         text.fillText("Press space to start a new game", window.innerWidth * 0.5, window.innerHeight / 3);
+
+        if (this.ship.assist) {
+          text.fillStyle = "#e85e5e";
+          text.fillText("Press A to disable landing assistance", window.innerWidth * 0.5, window.innerHeight / 2.4);
+        } else {
+          text.fillStyle = "#e85e5e";
+          text.fillText("Press A to enable landing assistance", window.innerWidth * 0.5, window.innerHeight / 2.4);
+        }
+
+        window.onkeyup = function (e) {
+          if (e.keyCode === 65) {
+            _this2.ship.assist = !_this2.ship.assist;
+            text.clearRect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 3.5);
+
+            _this2.result("bad");
+          }
+        };
       }
 
       ctx.fill();
       ctx.stroke();
+    }
+  }, {
+    key: "drawLastCommand",
+    value: function drawLastCommand(ranked) {
+      var text = this.textCtx;
+      text.fillStyle = "white";
+      text.fillText("Press ".concat(ranked ? "ENTER" : "SPACE", " to start a new game"), window.innerWidth * 0.5, window.innerHeight / 1.28);
+      text.stroke();
     }
   }]);
 
@@ -10837,6 +10893,8 @@ function () {
     value: function generateEndGameResult(result) {
       var _this2 = this;
 
+      var oldship = this.ship;
+
       if (result === 'good') {
         var ranked;
 
@@ -10846,14 +10904,15 @@ function () {
           ranked = Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["generateHighScoreForm"])(this.ship.fuel);
         }
 
+        this.drawText.drawLastCommand(ranked);
         setTimeout(function () {
           document.body.onkeyup = function (e) {
             if (ranked ? e.keyCode == 13 : e.keyCode == 32) {
               Object(_high_scores_utl__WEBPACK_IMPORTED_MODULE_1__["clearForm"])();
-              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false, oldship);
             }
           };
-        }, 500);
+        }, 600);
       } else if (result === 'bad') {
         setTimeout(function () {
           _this2.drawText.result('bad'); // generateHighScoreForm(this.ship.fuel)
@@ -10861,10 +10920,10 @@ function () {
 
           document.body.onkeyup = function (e) {
             if (e.keyCode == 32) {
-              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false);
+              Object(_app__WEBPACK_IMPORTED_MODULE_0__["newGame"])(null, false, oldship);
             }
           };
-        }, 500);
+        }, 600);
       }
     }
   }]);
