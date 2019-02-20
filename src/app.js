@@ -53,7 +53,6 @@ export const newGame = (e,fresh = true)=>{
     textCtx},
     ship )
   const game = new Game(surface,ship,drawText)
-
     if (fresh === true) {
       game.preGame()
       document.body.onkeyup = function (e) {
@@ -66,7 +65,7 @@ export const newGame = (e,fresh = true)=>{
       game.start()
       document.body.onkeyup = null
     }
-
+    document.getElementById("anchor").focus()
 }
 
 document.addEventListener("DOMContentLoaded", newGame)

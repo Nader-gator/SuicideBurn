@@ -10537,6 +10537,8 @@ var newGame = function newGame(e) {
     game.start();
     document.body.onkeyup = null;
   }
+
+  document.getElementById("anchor").focus();
 };
 document.addEventListener("DOMContentLoaded", newGame);
 
