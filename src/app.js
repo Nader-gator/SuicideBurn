@@ -17,7 +17,7 @@ export const newGame = (e,fresh = true)=>{
   const statsEl = document.getElementById('layer3')
   const statsCtx = statsEl.getContext("2d")
   
-  const textEl = document.getElementById('layer4')
+  const textEl = document.getElementById('layer4').focus()
   const textCtx = textEl.getContext("2d")
 
 
