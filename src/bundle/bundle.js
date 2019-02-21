@@ -11264,7 +11264,7 @@ var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpee
   canvasEl.width = window.innerWidth;
   var mockShip = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
     hSpeed: hSpeed,
-    vSpeed: vSpeed,
+    vSpeed: 0,
     ctx: ctx,
     coords: [x, y],
     gravity: 0,
