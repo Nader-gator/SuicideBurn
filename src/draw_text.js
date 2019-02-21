@@ -151,7 +151,7 @@ result(status) {
           window.innerWidth * 0.325,
           window.innerHeight / 6,
           window.innerWidth * 0.35,
-          window.innerHeight / 3.5
+          window.innerHeight / 1.7
         );
         this.result("good")
       }

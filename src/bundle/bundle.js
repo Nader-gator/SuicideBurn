@@ -10719,7 +10719,7 @@ function () {
         window.onkeyup = function (e) {
           if (e.keyCode === 65) {
             _this2.ship.assist = !_this2.ship.assist;
-            text.clearRect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 3.5);
+            text.clearRect(window.innerWidth * 0.325, window.innerHeight / 6, window.innerWidth * 0.35, window.innerHeight / 1.7);
 
             _this2.result("good");
           }

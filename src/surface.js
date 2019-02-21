@@ -179,7 +179,6 @@ export default class Surface {
     let yFloor
     //----modifiable random generator parameters
 
-    
     switch (type) {
       case 'flat':
         yRand = {max: 2, type: 0}
