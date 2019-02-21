@@ -22,6 +22,7 @@ export default class Ship {
     this.keyAction({},angle)
     this.step = this.step.bind(this)
     this.keyAction=this.keyAction.bind(this)
+    this.paused = false
   }
 
   radians(deg){

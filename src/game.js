@@ -52,11 +52,23 @@ export default class GameHandler{
   start(){
     this.drawText.clearCanvas()
     this.interval = setInterval(() => {
-      this.ship.step()
-      this.ship.render()
-      this.drawText.drawStats()
-      if (this.ship.assist){
-        this.predict()
+      if (!this.ship.paused){
+        document.body.onkeyup = (e)=> {
+            if (e.keyCode == 80) {
+              this.ship.paused = true
+              console.log(this.ship.paused)
+              document.body.onkeyup = (e)=> {
+                  if (e.keyCode == 80) {
+                    this.ship.paused = false
+                  }
+            }}}
+        this.ship.step()
+        this.ship.render()
+        this.drawText.drawStats()
+        if (this.ship.assist){
+          this.predict()
+        }
+
       }
       if (this.isOver()){
 

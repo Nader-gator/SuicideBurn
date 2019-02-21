@@ -10847,14 +10847,29 @@ function () {
 
       this.drawText.clearCanvas();
       this.interval = setInterval(function () {
-        _this.ship.step();
+        if (!_this.ship.paused) {
+          document.body.onkeyup = function (e) {
+            if (e.keyCode == 80) {
+              _this.ship.paused = true;
+              console.log(_this.ship.paused);
 
-        _this.ship.render();
+              document.body.onkeyup = function (e) {
+                if (e.keyCode == 80) {
+                  _this.ship.paused = false;
+                }
+              };
+            }
+          };
 
-        _this.drawText.drawStats();
+          _this.ship.step();
 
-        if (_this.ship.assist) {
-          _this.predict();
+          _this.ship.render();
+
+          _this.drawText.drawStats();
+
+          if (_this.ship.assist) {
+            _this.predict();
+          }
         }
 
         if (_this.isOver()) {
@@ -11356,6 +11371,7 @@ function () {
     this.keyAction({}, angle);
     this.step = this.step.bind(this);
     this.keyAction = this.keyAction.bind(this);
+    this.paused = false;
   }
 
   _createClass(Ship, [{
