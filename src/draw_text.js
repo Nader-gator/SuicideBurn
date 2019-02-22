@@ -21,7 +21,7 @@ drawStats() {
   ctx.strokeStyle = "white";
   text.clearRect(0, 0, window.innerWidth, window.innerHeight)
   text.beginPath();
-  text.font = "normal 13px Arial ";
+  text.font = `normal ${window.innerWidth * 0.008955}px Arial`;
   text.lineWidth = "1"
   text.textAlign = "left";
 
@@ -74,7 +74,8 @@ preGame() {
   ctx.stroke();
 
   text.beginPath();
-  text.font = "normal 18px Arial ";
+  text.font = `normal ${window.innerWidth * 0.0124}px Arial`;
+  console.log(window.innerWidth)
   text.fillStyle = "white";
   text.lineWidth = "1"
   text.textAlign = "center";
@@ -126,7 +127,7 @@ result(status) {
 
 
   text.beginPath();
-  text.font = "normal 25px Arial ";
+  text.font = "normal 25px Arial ";`normal ${window.innerWidth * 0.017222 }px Arial`
   text.fillStyle = "white";
   text.lineWidth = "1"
   text.textAlign = "center";

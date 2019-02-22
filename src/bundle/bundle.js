@@ -10594,7 +10594,7 @@ function () {
       ctx.strokeStyle = "white";
       text.clearRect(0, 0, window.innerWidth, window.innerHeight);
       text.beginPath();
-      text.font = "normal 13px Arial ";
+      text.font = "normal ".concat(window.innerWidth * 0.008955, "px Arial");
       text.lineWidth = "1";
       text.textAlign = "left";
       var style = this.changeStyle();
@@ -10645,7 +10645,8 @@ function () {
       ctx.fill();
       ctx.stroke();
       text.beginPath();
-      text.font = "normal 18px Arial ";
+      text.font = "normal ".concat(window.innerWidth * 0.0124, "px Arial");
+      console.log(window.innerWidth);
       text.fillStyle = "white";
       text.lineWidth = "1";
       text.textAlign = "center";
@@ -10700,6 +10701,7 @@ function () {
       ctx.fillStyle = "#252626";
       text.beginPath();
       text.font = "normal 25px Arial ";
+      "normal ".concat(window.innerWidth * 0.017222, "px Arial");
       text.fillStyle = "white";
       text.lineWidth = "1";
       text.textAlign = "center";
