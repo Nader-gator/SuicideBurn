@@ -144,10 +144,10 @@ const horizontalSecondarySimulation = (hSpeed, vSpeed, x, y, angle, surface) => 
   canvasEl.width = window.innerWidth
    const mockShip = new Ship({
      hSpeed,
-     vSpeed: 0,
+     vSpeed,
      ctx,
      coords: [x, y],
-     gravity: 0,
+     gravity: surface.gravity,
      fuel: 9001
    },angle)
 

@@ -11281,10 +11281,10 @@ var horizontalSecondarySimulation = function horizontalSecondarySimulation(hSpee
   canvasEl.width = window.innerWidth;
   var mockShip = new _ship__WEBPACK_IMPORTED_MODULE_1__["default"]({
     hSpeed: hSpeed,
-    vSpeed: 0,
+    vSpeed: vSpeed,
     ctx: ctx,
     coords: [x, y],
-    gravity: 0,
+    gravity: surface.gravity,
     fuel: 9001
   }, angle);
   var inverted = false;
